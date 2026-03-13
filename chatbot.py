@@ -34,6 +34,9 @@ def chatbot():
 
         # Run rules with extracted words
         result = apply_rules(words)
-        print(result)
+        if result == None:
+            print('Lo siento, no te he entendido')
+        else:
+            print(result)
 
 chatbot()
