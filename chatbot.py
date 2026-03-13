@@ -6,49 +6,34 @@ import tkinter as tk
 lemmatizer = WordNetLemmatizer()
 
 
-# Show scoring rules
-def show(nouns):
-    # Dictionary of scoring rules
+def apply_rules(words):
+    # Dictionary of rules
     rules = {
-        'hello': 'Hello. How can I help you?',
-        'horror': 'One good horror film is \'It\'.',
-        'goodbye': 'Goodbye'
+        'hola': 'Hola. En qué puedo ayudarte?',
+        'miedo': 'Una buena película de miedo es \'It\'.',
+        'adiós': 'Adiós!'
     }
 
     # Check nouns in dictionary
-    for noun in nouns:
+    for word in words:
         try:
-            return rules[noun]  # Print scoring rule
+            return rules[word]
         except:
-            None                # Ignore if noun not found
+            None
 
-
-def apply_rules(wh_words, verbs_lemm, nouns):
-
-    return show(nouns)
 
 def chatbot():
     while True:
-        s = input("\nAsk a question about a sport (type 'exit' to quit): ")
+        s = input("Usuario: ")
         
         # Tokenization
-        words = nltk.word_tokenize(s.lower())
-        if s.lower() == "exit":
-            print("Goodbye!")
+        words = nltk.word_tokenize(s.lower(), language='spanish')
+        if s.lower() == "exit" or s.lower() == "adiós":
+            print("Adiós!")
             break
 
-        # POS Tagging
-        tags = nltk.pos_tag(words)
-        nouns = [token for token, pos in tags if pos.startswith('N')]
-        verbs = [token for token, pos in tags if pos.startswith('V')]
-        adverbs = [token for token, pos in tags if pos.startswith('W')]
-
-        verbs_lemm = []
-        for verb in verbs:
-            verbs_lemm.append(lemmatizer.lemmatize(verb, pos="v"))
-
         # Run rules with extracted words
-        result = apply_rules(adverbs, verbs_lemm, nouns)
+        result = apply_rules(words)
         print(result)
 
 chatbot()
