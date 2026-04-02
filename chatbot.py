@@ -4,7 +4,10 @@ import spacy
 from nltk.stem import SnowballStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-import tkinter as tk
+
+#Para cargar si no existe
+nltk.download('stopwords', quiet=True)
+nltk.download('punkt', quiet=True) # Recomendado añadirlo también por si usas word_tokenize
 
 nlp = spacy.load("es_core_news_sm")
 stemmer = SnowballStemmer("spanish")
