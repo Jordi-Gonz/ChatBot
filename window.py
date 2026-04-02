@@ -5,7 +5,7 @@ st.set_page_config(page_title="Jordi's Filming", page_icon="🎬")
 st.title("🎬 Jordi's Filming")
 st.caption("Chatbot recomendador basado en reglas y NLP")
 
-# Como Streamlit recarga todo el script en cada interacción,
+# Como Streamlit recarga el script en cada interacción,
 # necesitamos guardar el historial de mensajes en la memoria de la sesión.
 # Para eso guardaremos los mensajes y los mostraremos en cada interacción
 if "messages" not in st.session_state:
