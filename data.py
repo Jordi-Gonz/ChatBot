@@ -154,6 +154,7 @@ df = pd.DataFrame(lista_vistas)
 
 media_time = df['time'].mean()
 media_global = df['global-rating'].mean()
+media_vistas = df['vistas'].mean()
 
 df_genre = pd.DataFrame(genre_data)
 df_year = pd.DataFrame(decade_data)
@@ -184,7 +185,8 @@ resultados_finales = {
     "usuario": "Jordigg",
     "estadisticas_generales": {
         "media_tiempo": media_time,
-        "media_global": media_global
+        "media_global": media_global,
+        "media_vistas": media_vistas
     },
     "afinidad_generos": genre_afinidad,
     "afinidad_decadas": year_afinidad,
