@@ -56,6 +56,14 @@ def obtener_lista(usuario):
                     
                     pelicula['global-rating'] = float(soup.find('a', class_= 'averagerating').get_text())
 
+                url = 'https://letterboxd.com/csi' + link + 'stats/'
+    
+                respuesta = scraper.get(url)
+            
+                if respuesta.status_code == 200:
+                    soup = BeautifulSoup(respuesta.text, 'html.parser')
+                    pelicula['vistas'] = int(soup.find('div', class_='-watches').get('aria-label').split()[2].replace(',', ''))
+
                 url = 'https://letterboxd.com' + link
         
                 respuesta = scraper.get(url)
