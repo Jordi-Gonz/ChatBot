@@ -56,6 +56,14 @@ def obtener_lista(usuario):
                     
                     pelicula['global-rating'] = float(soup.find('a', class_= 'averagerating').get_text())
 
+                url = 'https://letterboxd.com/csi' + link + 'stats/'
+    
+                respuesta = scraper.get(url)
+            
+                if respuesta.status_code == 200:
+                    soup = BeautifulSoup(respuesta.text, 'html.parser')
+                    pelicula['vistas'] = int(soup.find('div', class_='-watches').get('aria-label').split()[2].replace(',', ''))
+
                 url = 'https://letterboxd.com' + link
         
                 respuesta = scraper.get(url)
@@ -146,6 +154,7 @@ df = pd.DataFrame(lista_vistas)
 
 media_time = df['time'].mean()
 media_global = df['global-rating'].mean()
+media_vistas = df['vistas'].mean()
 
 df_genre = pd.DataFrame(genre_data)
 df_year = pd.DataFrame(decade_data)
@@ -176,7 +185,8 @@ resultados_finales = {
     "usuario": "Jordigg",
     "estadisticas_generales": {
         "media_tiempo": media_time,
-        "media_global": media_global
+        "media_global": media_global,
+        "media_vistas": media_vistas
     },
     "afinidad_generos": genre_afinidad,
     "afinidad_decadas": year_afinidad,
