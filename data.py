@@ -151,10 +151,11 @@ for item in YEARS:
     decade_data.append(decade)
 
 df = pd.DataFrame(lista_vistas)
+print(df.columns)
 
-media_time = df['time'].mean()
-media_global = df['global-rating'].mean()
-media_vistas = df['vistas'].mean()
+media_time = 0#df['time'].mean()
+media_global = 0#df['global-rating'].mean()
+media_vistas = 0#df['vistas'].mean()
 
 df_genre = pd.DataFrame(genre_data)
 df_year = pd.DataFrame(decade_data)

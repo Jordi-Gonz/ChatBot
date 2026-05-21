@@ -344,6 +344,110 @@ def search_by_collection(entities):
     except:
         return None
 
+def get_company_id(name):
+    url = f"{BASE_URL}/search/company?api_key={TMDB_API_KEY}&query={name}"
+    response = requests.get(url).json()
+    if response.get('results'):
+        return response['results'][0]['id']
+    return None
+
+def search_by_company(entities):
+    """Filtra por productoras."""
+
+    if entities.get("productoras"):
+        ids = []
+        for nombre in entities["productoras"]:
+            cid = get_company_id(nombre)
+            if cid: ids.append(str(cid))
+        if ids: company_ids = ",".join(ids)
+
+    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&with_companies={company_ids}"
+
+    try:
+        response = requests.get(search_url).json()
+        movies = response['results']
+        if not movies:
+            return None
+
+        profile = load_user_profile()
+
+        scored_movies = []
+        for movie in movies:
+            score = calcular_puntuacion(movie, profile)
+            scored_movies.append({
+                "data": movie,
+                "score": score
+            })
+
+        scored_movies.sort(key=lambda x: x['score'], reverse=True)
+
+        top_3 = []
+        for item in scored_movies[:3]:
+            m = item['data']
+            top_3.append({
+                "title": m.get('title'),
+                "score": item['score'],
+                "overview": m.get('overview'),
+                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
+                "release": m.get('release_date')
+            })
+        return top_3
+    except:
+        return None
+
+def get_provider_id(name, region="ES"):
+    # Obtenemos todos los proveedores de la región
+    url = f"{BASE_URL}/watch/providers/movie?api_key={TMDB_API_KEY}&watch_region={region}"
+    response = requests.get(url).json()
+    for p in response.get('results', []):
+        if name.lower() in p['provider_name'].lower():
+            return p['provider_id']
+    return None
+
+def search_by_platform(entities):
+    """Filtra por plataforma de streaming."""
+
+    if entities.get("plataformas"):
+        ids = []
+        for nombre in entities["plataformas"]:
+            pid = get_provider_id(nombre)
+            if pid: ids.append(str(pid))
+        if ids: platform_id = ",".join(ids)
+
+    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&watch_region=ES&with_watch_providers={platform_id}"
+
+    try:
+        response = requests.get(search_url).json()
+        movies = response['results']
+        if not movies:
+            return None
+
+        profile = load_user_profile()
+
+        scored_movies = []
+        for movie in movies:
+            score = calcular_puntuacion(movie, profile)
+            scored_movies.append({
+                "data": movie,
+                "score": score
+            })
+
+        scored_movies.sort(key=lambda x: x['score'], reverse=True)
+
+        top_3 = []
+        for item in scored_movies[:3]:
+            m = item['data']
+            top_3.append({
+                "title": m.get('title'),
+                "score": item['score'],
+                "overview": m.get('overview'),
+                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
+                "release": m.get('release_date')
+            })
+        return top_3
+    except:
+        return None
+
 def search_discovery():
     """Realiza una búsqueda exploratoria sin filtros restrictivos."""
     # Buscamos películas de alta calidad (Top Tier)

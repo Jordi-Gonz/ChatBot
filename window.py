@@ -1,5 +1,7 @@
 import streamlit as st
-from chatbot import detect_entities, analyze_intent_and_tags, search_by_genre, search_by_antigenre, search_by_actor_or_director, search_by_collection, search_discovery
+from chatbot import detect_entities, analyze_intent_and_tags, search_by_genre, search_by_antigenre, search_by_actor_or_director, search_by_collection, search_discovery, search_by_company, search_by_platform
+from data import obtener_lista
+
 
 def render_movie_card(movie_data):
     if isinstance(movie_data, list):
@@ -23,6 +25,17 @@ def run_gui():
     st.set_page_config(page_title="Jordi's Filming", page_icon="🍿", layout="centered")
     st.title("🍿 Jordi's Filming")
     st.caption("Tu recomendador inteligente de cine")
+
+    with st.sidebar:
+        st.title("⚙️ Configuración")
+        if "letterboxd_user" not in st.session_state:
+            st.session_state.letterboxd_user = ""
+
+        user_input = st.text_input("Usuario de Letterboxd", value=st.session_state.letterboxd_user)
+        if st.button("Guardar Usuario"):
+            st.session_state.letterboxd_user = user_input
+            st.success(f"Usuario guardado: {user_input}")
+            obtener_lista(user_input)
 
     if "messages" not in st.session_state:
         st.session_state.messages = [{"role": "assistant", "content": "¡Hola! ¿Qué te apetece ver hoy?"}]
@@ -82,10 +95,14 @@ def run_gui():
                                 movie_list = search_by_collection(entities)
                         if entities.get("productoras"):
                             avisos_lista.append(f"🏢 Productora: {', '.join(entities['productoras'])}")
+                            if intencion == "QUERER":
+                                movie_list = search_by_company(entities)
                         if entities.get("temas"):
                             avisos_lista.append(f"🏷️ Tema: {', '.join(entities['temas'])}")
                         if entities.get("plataformas"):
                             avisos_lista.append(f"📺 Plataforma: {', '.join(entities['plataformas'])}")
+                            if intencion == "QUERER":
+                                movie_list = search_by_platform(entities)
                         aviso_texto = "🔎 He detectado: " + " | ".join(avisos_lista)
                         st.info(aviso_texto)
                     else:
