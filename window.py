@@ -58,7 +58,7 @@ def run_gui():
             # Detección y visualización de Entidades
             entities = detect_entities(prompt)
             movie_list = []
-            if any(entities.values()) or display_intent == "DESCUBRIR" or display_intent == "CONTRADICCION":
+            if any(entities.values()) or intencion == "DESCUBRIR":
                 with st.spinner('Consultando las mejores opciones para ti...'):
                     avisos_lista = []
                     if any(entities.values()):
@@ -91,6 +91,8 @@ def run_gui():
                     else:
                         if intencion == "DESCUBRIR":
                             movie_list = search_discovery()
+                            print("Descubrir")
+                            print(movie_list)
                     # Aplicar reglas y buscar película
                     if movie_list:
                         st.write("### Mis recomendaciones para ti:")
