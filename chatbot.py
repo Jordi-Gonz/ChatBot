@@ -370,14 +370,16 @@ def search_discovery():
     candidates = scored_movies[:5]
     choice = random.choice(candidates)
 
+    top_3 = []
     m = choice['data']
-    return {
+    top_3.append({
         "title": m.get('title'),
         "score": choice['score'],
         "overview": m.get('overview'),
         "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
         "release": m.get('release_date')
-    }
+    })
+    return top_3
 
 def detect_entities(text_original):
     """Detecta entidades con lógica de prioridad literal y umbral dinámico[cite: 1, 2]."""
