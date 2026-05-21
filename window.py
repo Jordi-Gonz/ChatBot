@@ -1,8 +1,15 @@
 import streamlit as st
-import re
-from chatbot import process_text, apply_rules, detect_entities, search_movie_visual, analyze_intent_and_tags
+from chatbot import detect_entities, analyze_intent_and_tags, search_by_genre, search_by_antigenre, search_by_actor_or_director, search_by_collection, search_discovery
 
-def render_movie_card(movie):
+def render_movie_card(movie_data):
+    if isinstance(movie_data, list):
+        for movie in movie_data:
+            render_single_card(movie)
+            st.divider()
+    else:
+        render_single_card(movie_data)
+
+def render_single_card(movie):
     col1, col2 = st.columns([1, 2])
     with col1:
         if movie["poster"]: st.image(movie["poster"], use_container_width=True)
@@ -50,32 +57,69 @@ def run_gui():
 
             # Detección y visualización de Entidades
             entities = detect_entities(prompt)
-            aviso_texto = ""
-            if any(entities.values()):
-                avisos_lista = []
-                if entities.get("generos"): avisos_lista.append(f"🎬 Género: {', '.join(entities['generos'])}")
-                if entities.get("actores"): avisos_lista.append(f"🎭 Actor: {', '.join(entities['actores'])}")
-                if entities.get("directores"): avisos_lista.append(f"🎥 Director: {', '.join(entities['directores'])}")
-                if entities.get("sagas"): avisos_lista.append(f"📚 Saga: {', '.join(entities['sagas'])}")
-                if entities.get("productoras"): avisos_lista.append(f"🏢 Productora: {', '.join(entities['productoras'])}")
-                if entities.get("temas"): avisos_lista.append(f"🏷️ Tema: {', '.join(entities['temas'])}")
-                if entities.get("plataformas"): avisos_lista.append(f"📺 Plataforma: {', '.join(entities['plataformas'])}")
-                aviso_texto = "🔎 He detectado: " + " | ".join(avisos_lista)
-                st.info(aviso_texto)
+            movie_list = []
+            if any(entities.values()) or display_intent == "DESCUBRIR" or display_intent == "CONTRADICCION":
+                with st.spinner('Consultando las mejores opciones para ti...'):
+                    avisos_lista = []
+                    if any(entities.values()):
+                        if entities.get("generos"):
+                            avisos_lista.append(f"🎬 Género: {', '.join(entities['generos'])}")
+                            if intencion == "QUERER":
+                                movie_list = search_by_genre(entities['generos'])
+                            if intencion == "NO_QUERER":
+                                movie_list = search_by_antigenre(entities['generos'])
+                        if entities.get("actores"):
+                            avisos_lista.append(f"🎭 Actor: {', '.join(entities['actores'])}")
+                            if intencion == "QUERER":
+                                movie_list = search_by_actor_or_director(entities)
+                        if entities.get("directores"):
+                            avisos_lista.append(f"🎥 Director: {', '.join(entities['directores'])}")
+                            if intencion == "QUERER":
+                                movie_list = search_by_actor_or_director(entities)
+                        if entities.get("sagas"):
+                            avisos_lista.append(f"📚 Saga: {', '.join(entities['sagas'])}")
+                            if intencion == "QUERER":
+                                movie_list = search_by_collection(entities)
+                        if entities.get("productoras"):
+                            avisos_lista.append(f"🏢 Productora: {', '.join(entities['productoras'])}")
+                        if entities.get("temas"):
+                            avisos_lista.append(f"🏷️ Tema: {', '.join(entities['temas'])}")
+                        if entities.get("plataformas"):
+                            avisos_lista.append(f"📺 Plataforma: {', '.join(entities['plataformas'])}")
+                        aviso_texto = "🔎 He detectado: " + " | ".join(avisos_lista)
+                        st.info(aviso_texto)
+                    else:
+                        if intencion == "DESCUBRIR":
+                            movie_list = search_discovery()
+                    # Aplicar reglas y buscar película
+                    if movie_list:
+                        st.write("### Mis recomendaciones para ti:")
 
-            # Aplicar reglas y buscar película
-            respuesta = apply_rules(process_text(prompt))
-            st.markdown(respuesta)
-            
-            match = re.search(r"'(.*?)'", respuesta)
-            movie_info = search_movie_visual(match.group(1)) if match else None
-            
-            new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent, "tags_detected": tags}
-            if aviso_texto: new_msg["entities_detected"] = aviso_texto
-            if movie_info: 
-                render_movie_card(movie_info)
-                new_msg["movie_info"] = movie_info
-            
+                        # Eliminamos el uso de st.columns(3) e iteramos directamente
+                        for movie_info in movie_list:
+                            # Renderizamos directamente cada película sin columnas
+                            render_single_card(movie_info)
+
+                        new_msg = {
+                            "role": "assistant",
+                            "content": "He analizado tus preferencias y aquí tienes el Top 3 que mejor encaja contigo.",
+                            "movie_info": movie_list
+                        }
+                    else:
+                        if intencion == "CONTRADICCION":
+                            respuesta = "Antes de escribir el mensaje aclarate, por favor..."
+                        else:
+                            # Caso en que no hay resultados
+                            respuesta = "Perdona, no he encontrado películas que se ajusten a esa petición."
+                        st.markdown(respuesta)
+                        new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent,
+                                   "tags_detected": tags}
+            else:
+                #Caso en que no hay resultados
+                respuesta = "Perdona, no he encontrado películas que se ajusten a esa petición."
+                st.markdown(respuesta)
+                new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent,
+                           "tags_detected": tags}
             st.session_state.messages.append(new_msg)
 
 if __name__ == "__main__": 
