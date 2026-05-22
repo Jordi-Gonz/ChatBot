@@ -76,7 +76,7 @@ def obtener_lista(usuario):
 
                     genres_list = []
 
-                    genres = soup.find('div', id='tab-genres').find('div', class_='text-sluglist').find_all('a')
+                    genres = soup.find('div', id='tab-panel-genres').find('div', class_='text-sluglist').find_all('a')
 
                     for item in genres:
                         genres_list.append(item.get_text())
