@@ -48,12 +48,12 @@ def obtener_lista(usuario):
                 link = p.find('div', class_ = 'react-component')['data-item-link']
 
                 url = 'https://letterboxd.com/csi' + link + 'rating-histogram/'
-    
+
                 respuesta = scraper.get(url)
             
                 if respuesta.status_code == 200:
                     soup = BeautifulSoup(respuesta.text, 'html.parser')
-                    
+
                     pelicula['global-rating'] = float(soup.find('a', class_= 'averagerating').get_text())
 
                 url = 'https://letterboxd.com/csi' + link + 'stats/'
@@ -72,11 +72,12 @@ def obtener_lista(usuario):
                     soup = BeautifulSoup(respuesta.text, 'html.parser')
 
                     pelicula['year'] = int(soup.find('span', class_='releasedate').get_text())
+
                     pelicula['time'] = int(soup.find('p', class_='text-link text-footer').get_text().split(' ')[1].split()[0])
 
                     genres_list = []
 
-                    genres = soup.find('div', id='tab-genres').find('div', class_='text-sluglist').find_all('a')
+                    genres = soup.find('div', id='tab-panel-genres').find('div', class_='text-sluglist').find_all('a')
 
                     for item in genres:
                         genres_list.append(item.get_text())
