@@ -1,0 +1,99 @@
+{
+  "genres": [
+    {
+      "id": 28,
+      "name": "Action",
+      "nombre": "Acción"
+    },
+    {
+      "id": 12,
+      "name": "Adventure",
+      "nombre": "Aventura"
+    },
+    {
+      "id": 16,
+      "name": "Animation",
+      "nombre": "Animación"
+    },
+    {
+      "id": 35,
+      "name": "Comedy",
+      "nombre": "Comedia"
+    },
+    {
+      "id": 80,
+      "name": "Crime",
+      "nombre": "Crimen"
+    },
+    {
+      "id": 99,
+      "name": "Documentary",
+      "nombre": "Documental"
+    },
+    {
+      "id": 18,
+      "name": "Drama",
+      "nombre": "Drama"
+    },
+    {
+      "id": 10751,
+      "name": "Family",
+      "nombre": "Familia"
+    },
+    {
+      "id": 14,
+      "name": "Fantasy",
+      "nombre": "Fantasía"
+    },
+    {
+      "id": 36,
+      "name": "History",
+      "nombre": "Historia"
+    },
+    {
+      "id": 27,
+      "name": "Horror",
+      "nombre": "Horror"
+    },
+    {
+      "id": 10402,
+      "name": "Music",
+      "nombre": "Musica"
+    },
+    {
+      "id": 9648,
+      "name": "Mystery",
+      "nombre": "Misterio"
+    },
+    {
+      "id": 10749,
+      "name": "Romance",
+      "nombre": "Romance"
+    },
+    {
+      "id": 878,
+      "name": "Science Fiction",
+      "nombre": "Ciencia Ficción"
+    },
+    {
+      "id": 10770,
+      "name": "TV-Film",
+      "nombre": "Película de TV"
+    },
+    {
+      "id": 53,
+      "name": "Thriller",
+      "nombre": "Suspense"
+    },
+    {
+      "id": 10752,
+      "name": "War",
+      "nombre": "Bélica"
+    },
+    {
+      "id": 37,
+      "name": "Western",
+      "nombre": "Viejo Oeste"
+    }
+  ]
+}
