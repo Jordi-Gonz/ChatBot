@@ -1,6 +1,6 @@
 import streamlit as st
 from chatbot import detect_entities, analyze_intent_and_tags, search_by_genre, search_by_antigenre, search_by_actor_or_director, search_by_collection, search_discovery, search_by_company, search_by_platform
-from data import obtener_lista
+from data import nuevo_usuario
 
 
 def render_movie_card(movie_data):
@@ -35,7 +35,7 @@ def run_gui():
         if st.button("Guardar Usuario"):
             st.session_state.letterboxd_user = user_input
             st.success(f"Usuario guardado: {user_input}")
-            obtener_lista(user_input)
+            nuevo_usuario(user_input)
 
     if "messages" not in st.session_state:
         st.session_state.messages = [{"role": "assistant", "content": "¡Hola! ¿Qué te apetece ver hoy?"}]
