@@ -68,11 +68,13 @@ def analyze_intent_and_tags(text):
                 break
 
     keywords_querer = ["quiero", "gusta", "encanta", "apetece", "amo", "recomienda", "busca", "ponme", "ver"]
-    keywords_negacion = ["no", "ni", "nunca", "jamás", "nada", "tampoco", "ninguna", "pero"]
+    keywords_negacion = ["no", "ni", "nunca", "jamás", "nada", "tampoco", "ninguna"]
+    keywords_contradiccion = ["pero", "sino"]
     keywords_descubrir = ["nuevo", "sorprendeme", "descubrir", "estreno", "joya", "diferente"]
 
     tiene_querer = False
     tiene_no_querer = False
+    tiene_contradiccion = any(kw in tokens for kw in keywords_contradiccion)
     tiene_descubrir = any(kw in tokens for kw in keywords_descubrir)
 
     for i, word in enumerate(tokens):
@@ -82,10 +84,10 @@ def analyze_intent_and_tags(text):
                 tiene_no_querer = True
             else:
                 tiene_querer = True
-        if word in ["odio", "detesto", "asco", "quita", "evita"]:
+        if word in ["odio", "detesto", "asco", "quita", "evita"] or word in keywords_negacion:
             tiene_no_querer = True
 
-    if tiene_querer and tiene_no_querer: intencion = "CONTRADICCION"
+    if tiene_querer and tiene_no_querer or tiene_contradiccion: intencion = "CONTRADICCION"
     elif tiene_no_querer: intencion = "NO_QUERER"
     elif tiene_descubrir: intencion = "DESCUBRIR"
     elif tiene_querer: intencion = "QUERER"

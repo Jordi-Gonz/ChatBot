@@ -74,46 +74,46 @@ def run_gui():
             
             # --- SECCIÓN OPTIMIZADA CON LA NUEVA FUNCIÓN ---
             if any(entities.values()) or intencion == "DESCUBRIR":
-                with st.spinner('Consultando las mejores opciones para ti...'):
-                    avisos_lista = []
-                    
-                    # Mostrar la información detectada en la UI
-                    if entities.get("generos"): avisos_lista.append(f"🎬 Género: {', '.join(entities['generos'])}")
-                    if entities.get("actores"): avisos_lista.append(f"🎭 Actor: {', '.join(entities['actores'])}")
-                    if entities.get("directores"): avisos_lista.append(f"🎥 Director: {', '.join(entities['directores'])}")
-                    if entities.get("sagas"): avisos_lista.append(f"📚 Saga: {', '.join(entities['sagas'])}")
-                    if entities.get("productoras"): avisos_lista.append(f"🏢 Productora: {', '.join(entities['productoras'])}")
-                    if entities.get("temas"): avisos_lista.append(f"🏷️ Tema: {', '.join(entities['temas'])}")
-                    if entities.get("plataformas"): avisos_lista.append(f"📺 Plataforma: {', '.join(entities['plataformas'])}")
-                    
-                    if avisos_lista:
-                        aviso_texto = "🔎 He detectado: " + " | ".join(avisos_lista)
-                        st.info(aviso_texto)
+                if intencion == "CONTRADICCION":
+                    respuesta = "Antes de escribir el mensaje aclarate, por favor..."
+                    st.markdown(respuesta)
+                    new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent, "tags_detected": tags}
+                else:
+                    with st.spinner('Consultando las mejores opciones para ti...'):
+                        avisos_lista = []
+                        
+                        # Mostrar la información detectada en la UI
+                        if entities.get("generos"): avisos_lista.append(f"🎬 Género: {', '.join(entities['generos'])}")
+                        if entities.get("actores"): avisos_lista.append(f"🎭 Actor: {', '.join(entities['actores'])}")
+                        if entities.get("directores"): avisos_lista.append(f"🎥 Director: {', '.join(entities['directores'])}")
+                        if entities.get("sagas"): avisos_lista.append(f"📚 Saga: {', '.join(entities['sagas'])}")
+                        if entities.get("productoras"): avisos_lista.append(f"🏢 Productora: {', '.join(entities['productoras'])}")
+                        if entities.get("temas"): avisos_lista.append(f"🏷️ Tema: {', '.join(entities['temas'])}")
+                        if entities.get("plataformas"): avisos_lista.append(f"📺 Plataforma: {', '.join(entities['plataformas'])}")
+                        
+                        if avisos_lista:
+                            aviso_texto = "🔎 He detectado: " + " | ".join(avisos_lista)
+                            st.info(aviso_texto)
 
-                    movie_list = search_by_all_entities(entities, intencion)
+                        movie_list = search_by_all_entities(entities, intencion)
 
-                    # Mostrar resultados en pantalla si existen
-                    if movie_list:
-                        st.write("### Mis recomendaciones para ti:")
-                        for movie_info in movie_list:
-                            render_single_card(movie_info)
+                        if movie_list:
+                            st.write("### Mis recomendaciones para ti:")
+                            for movie_info in movie_list:
+                                render_single_card(movie_info)
 
-                        # Guardamos el mensaje con la metadata correcta para el historial
-                        new_msg = {
-                            "role": "assistant",
-                            "content": "He analizado tus preferencias y aquí tienes el Top 3 que mejor encaja contigo.",
-                            "intent_display": display_intent,
-                            "tags_detected": tags,
-                            "entities_detected": aviso_texto if avisos_lista else None,
-                            "movie_info": movie_list
-                        }
-                    else:
-                        if intencion == "CONTRADICCION":
-                            respuesta = "Antes de escribir el mensaje aclarate, por favor..."
+                            new_msg = {
+                                "role": "assistant",
+                                "content": "He analizado tus preferencias y aquí tienes el Top 3 que mejor encaja contigo.",
+                                "intent_display": display_intent,
+                                "tags_detected": tags,
+                                "entities_detected": aviso_texto if avisos_lista else None,
+                                "movie_info": movie_list
+                            }
                         else:
                             respuesta = "Perdona, no he encontrado películas que se ajusten a esa petición."
-                        st.markdown(respuesta)
-                        new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent, "tags_detected": tags}
+                            st.markdown(respuesta)
+                            new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent, "tags_detected": tags}
             else:
                 respuesta = "Perdona, no he encontrado películas que se ajusten a esa petición."
                 st.markdown(respuesta)
