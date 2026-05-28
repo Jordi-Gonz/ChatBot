@@ -50,7 +50,8 @@
         "aventura",
         "romance",
         "suspense",
-        "película de tv",
+        "televisión",
+        "tv",
         "ciencia ficción",
         "comedia",
         "drama",
@@ -60,14 +61,14 @@
         "bélico",
         "animación",
         "misterio",
-        "película",
         "ciencia",
         "historia",
         "terror",
         "familia",
         "crimen",
         "western",
-        "acción"
+        "acción",
+        "miedo"
     ],
     "keywords": [
         "sibling relationship",
@@ -1736,7 +1737,8 @@
         "lgbt",
         "crush",
         "porn star",
-        "explosive confrontation"
+        "explosive confrontation",
+        "casual"
     ],
     "personas": {
         "actores": [
@@ -2140,6 +2142,14 @@
             "george lucas"
         ]
     },
+    "plataformas": [
+        "netflix",
+        "amazon",
+        "disney",
+        "paramount",
+        "HBO",
+        "movistar"
+    ],
     "estudios": [
         { "nombre": "ufotable", "umbral": 0.7 },
         { "nombre": "patrick aiello productions", "umbral": 0.7 },

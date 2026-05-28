@@ -68,7 +68,7 @@ def analyze_intent_and_tags(text):
                 break
 
     keywords_querer = ["quiero", "gusta", "encanta", "apetece", "amo", "recomienda", "busca", "ponme", "ver"]
-    keywords_negacion = ["no", "ni", "nunca", "jamás", "nada", "tampoco", "ninguna"]
+    keywords_negacion = ["no", "ni", "nunca", "jamás", "nada", "tampoco", "ninguna", "pero"]
     keywords_descubrir = ["nuevo", "sorprendeme", "descubrir", "estreno", "joya", "diferente"]
 
     tiene_querer = False
@@ -100,7 +100,7 @@ def get_genres_by_string(genres):
     genres_num = []
     for genre in genres:
         for item in data['genres']:
-            if genre.lower() == item['nombre'].lower():
+            if genre.lower() in item['nombre'].lower():
                 genres_num.append(item['id'])
     return genres_num
 
@@ -155,140 +155,12 @@ def load_user_profile(filepath="DB/datos_letterboxd.json"):
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def search_by_genre(genres):
-    genres_num = get_genres_by_string(genres)
-    genres_formatted_string = ",".join(map(str, genres_num))
-    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false&sort_by=popularity.desc&with_genres={genres_formatted_string}"
-    try:
-        response = requests.get(search_url).json()
-        movies = response['results']
-        if not movies:
-            return None
-
-        profile = load_user_profile()
-
-        scored_movies = []
-        for movie in movies:
-            score = calcular_puntuacion(movie, profile)
-            scored_movies.append({
-                "data": movie,
-                "score": score
-            })
-
-        scored_movies.sort(key=lambda x: x['score'], reverse=True)
-
-        top_3 = []
-        for item in scored_movies[:3]:
-            m = item['data']
-            top_3.append({
-                "title": m.get('title'),
-                "score": item['score'],
-                "overview": m.get('overview'),
-                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
-                "release": m.get('release_date')
-            })
-        return top_3
-    except:
-        return None
-
-def search_by_antigenre(genres):
-    genres_num = get_genres_by_string(genres)
-    genres_formatted_string = ",".join(map(str, genres_num))
-    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false&sort_by=popularity.desc&without_genres={genres_formatted_string}"
-    try:
-        response = requests.get(search_url).json()
-        movies = response['results']
-        if not movies:
-            return None
-
-        profile = load_user_profile()
-
-        scored_movies = []
-        for movie in movies:
-            score = calcular_puntuacion(movie, profile)
-            scored_movies.append({
-                "data": movie,
-                "score": score
-            })
-
-        scored_movies.sort(key=lambda x: x['score'], reverse=True)
-
-        top_3 = []
-        for item in scored_movies[:3]:
-            m = item['data']
-            top_3.append({
-                "title": m.get('title'),
-                "score": item['score'],
-                "overview": m.get('overview'),
-                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
-                "release": m.get('release_date')
-            })
-        return top_3
-    except:
-        return None
-
 def get_person_id(name):
     url = f"{BASE_URL}/search/person?api_key={TMDB_API_KEY}&query={name}"
     response = requests.get(url).json()
     if response.get('results'):
         return response['results'][0]['id']
     return None
-
-
-def search_by_actor_or_director(entities):
-    all_people_ids = []
-
-    #Procesar Actores
-    if entities.get("actores"):
-        for nombre in entities["actores"]:
-            pid = get_person_id(nombre)
-            if pid: all_people_ids.append(str(pid))
-
-    #Procesar Directores
-    if entities.get("directores"):
-        for nombre in entities["directores"]:
-            pid = get_person_id(nombre)
-            if pid: all_people_ids.append(str(pid))
-
-    #Crear el string único people_id si hay IDs recolectados
-    if all_people_ids:
-        #Eliminamos duplicados (por si alguien es actor y director a la vez)
-        unique_people_ids = list(set(all_people_ids))
-        people_id = ",".join(unique_people_ids)
-
-    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false&sort_by=popularity.desc&with_crew={people_id}"
-    try:
-        response = requests.get(search_url).json()
-        print(response)
-        movies = response['results']
-        if not movies:
-            return None
-
-        profile = load_user_profile()
-
-        scored_movies = []
-        for movie in movies:
-            score = calcular_puntuacion(movie, profile)
-            scored_movies.append({
-                "data": movie,
-                "score": score
-            })
-
-        scored_movies.sort(key=lambda x: x['score'], reverse=True)
-
-        top_3 = []
-        for item in scored_movies[:3]:
-            m = item['data']
-            top_3.append({
-                "title": m.get('title'),
-                "score": item['score'],
-                "overview": m.get('overview'),
-                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
-                "release": m.get('release_date')
-            })
-        return top_3
-    except:
-        return None
 
 def get_collection_id(name):
     url = f"{BASE_URL}/search/collection?api_key={TMDB_API_KEY}&query={name}&language=es-ES"
@@ -298,102 +170,12 @@ def get_collection_id(name):
         return response['results'][0]['id']
     return None
 
-def search_by_collection(entities):
-    #Procesar Sagas
-    if entities.get("sagas"):
-        ids_sagas = []
-        for nombre in entities["sagas"]:
-            cid = get_collection_id(nombre)
-            if cid: ids_sagas.append(str(cid))
-
-        if ids_sagas:
-            unique_collection_ids = list(set(ids_sagas))
-            collections_id = ",".join(unique_collection_ids)
-
-    search_url = f"{BASE_URL}/collection/{collections_id}?api_key={TMDB_API_KEY}&language=es-ES"
-    try:
-        response = requests.get(search_url).json()
-        print(response)
-        movies = response['parts']
-        if not movies:
-            return None
-
-        profile = load_user_profile()
-
-        scored_movies = []
-        for movie in movies:
-            score = calcular_puntuacion(movie, profile)
-            scored_movies.append({
-                "data": movie,
-                "score": score
-            })
-
-        scored_movies.sort(key=lambda x: x['score'], reverse=True)
-
-        top_3 = []
-        for item in scored_movies[:3]:
-            m = item['data']
-            top_3.append({
-                "title": m.get('title'),
-                "score": item['score'],
-                "overview": m.get('overview'),
-                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
-                "release": m.get('release_date')
-            })
-        return top_3
-    except:
-        return None
-
 def get_company_id(name):
     url = f"{BASE_URL}/search/company?api_key={TMDB_API_KEY}&query={name}"
     response = requests.get(url).json()
     if response.get('results'):
         return response['results'][0]['id']
     return None
-
-def search_by_company(entities):
-    """Filtra por productoras."""
-
-    if entities.get("productoras"):
-        ids = []
-        for nombre in entities["productoras"]:
-            cid = get_company_id(nombre)
-            if cid: ids.append(str(cid))
-        if ids: company_ids = ",".join(ids)
-
-    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&with_companies={company_ids}"
-
-    try:
-        response = requests.get(search_url).json()
-        movies = response['results']
-        if not movies:
-            return None
-
-        profile = load_user_profile()
-
-        scored_movies = []
-        for movie in movies:
-            score = calcular_puntuacion(movie, profile)
-            scored_movies.append({
-                "data": movie,
-                "score": score
-            })
-
-        scored_movies.sort(key=lambda x: x['score'], reverse=True)
-
-        top_3 = []
-        for item in scored_movies[:3]:
-            m = item['data']
-            top_3.append({
-                "title": m.get('title'),
-                "score": item['score'],
-                "overview": m.get('overview'),
-                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
-                "release": m.get('release_date')
-            })
-        return top_3
-    except:
-        return None
 
 def get_provider_id(name, region="ES"):
     # Obtenemos todos los proveedores de la región
@@ -403,50 +185,6 @@ def get_provider_id(name, region="ES"):
         if name.lower() in p['provider_name'].lower():
             return p['provider_id']
     return None
-
-def search_by_platform(entities):
-    """Filtra por plataforma de streaming."""
-
-    if entities.get("plataformas"):
-        ids = []
-        for nombre in entities["plataformas"]:
-            pid = get_provider_id(nombre)
-            if pid: ids.append(str(pid))
-        if ids: platform_id = ",".join(ids)
-
-    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&watch_region=ES&with_watch_providers={platform_id}"
-
-    try:
-        response = requests.get(search_url).json()
-        movies = response['results']
-        if not movies:
-            return None
-
-        profile = load_user_profile()
-
-        scored_movies = []
-        for movie in movies:
-            score = calcular_puntuacion(movie, profile)
-            scored_movies.append({
-                "data": movie,
-                "score": score
-            })
-
-        scored_movies.sort(key=lambda x: x['score'], reverse=True)
-
-        top_3 = []
-        for item in scored_movies[:3]:
-            m = item['data']
-            top_3.append({
-                "title": m.get('title'),
-                "score": item['score'],
-                "overview": m.get('overview'),
-                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
-                "release": m.get('release_date')
-            })
-        return top_3
-    except:
-        return None
 
 def search_discovery():
     """Realiza una búsqueda exploratoria sin filtros restrictivos."""
@@ -537,17 +275,26 @@ def detect_entities(text_original):
                 if fuzzy_match(text_lower, nombre_entidad, threshold):
                     res[clave_res].append(nombre_entidad.title())
 
-    # Personas (Búsqueda por palabras exactas)
-    for palabra in palabras_usuario:
-        for a in ACTORES:
-            if palabra in a.split(): res["actores"].append(a.title())
-        for d in DIRECTORES:
-            if palabra in d.split(): res["directores"].append(d.title())
+    for a in ACTORES:
+        if a.lower() in text_lower:
+            res["actores"].append(a.title())
+    for d in DIRECTORES:
+        if d.lower() in text_lower:
+            res["actores"].append(d.title())
             
     # Temas/Keywords
     for k in KEYWORDS:
-        if k in text_lower and len(k) > 4:
+        k_lower = k.lower()
+        
+        # Caso 1: La keyword de tu DB está tal cual en el texto del usuario
+        # Ejemplo: El usuario escribió "Me gusta el marvel cinematic universe"
+        if k_lower in text_lower:
             res["temas"].append(k)
+            
+        elif len(k_lower.split()) > 1:
+            palabras_clave_db = [w for w in k_lower.split() if len(w) > 4 or w == "dc"]
+            if any(w in text_lower for w in palabras_clave_db):
+                res["temas"].append(k)
 
     # Limpieza final de duplicados
     for key in res: 
@@ -586,3 +333,137 @@ def search_movie_visual(movie_name):
                 "release": movie.get('release_date')
             }
     except: return None
+
+def get_keyword_ids(keywords_list):
+    """Busca en TMDB los IDs correspondientes a una lista de strings de palabras clave."""
+    keyword_ids = []
+    for kw in keywords_list:
+        url = f"{BASE_URL}/search/keyword?api_key={TMDB_API_KEY}&query={kw}"
+        try:
+            response = requests.get(url).json()
+            if response.get('results'):
+                # Tomamos el primer resultado que coincida con la búsqueda
+                keyword_ids.append(str(response['results'][0]['id']))
+        except Exception as e:
+            print(f"Error al buscar la keyword '{kw}': {e}")
+    return keyword_ids
+
+
+def get_movie_details(movie_id):
+    url = f"{BASE_URL}/movie/{movie_id}?api_key={TMDB_API_KEY}&language=es-ES&append_to_response=keywords"
+    response = requests.get(url).json()
+    return response
+
+def search_by_all_entities(entities, intencion="QUERER"):
+    """
+    Construye una búsqueda combinando dinámicamente todas las entidades detectadas.
+    Soporta inclusión (QUERER) y exclusión (NO_QUERER) de entidades basándose en la intención.
+    """
+
+    if intencion == "DESCUBRIR" and not any(entities.values()):
+        return search_discovery()
+
+    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false&sort_by=popularity.desc"
+    
+    excluded_people_ids = []
+
+    if entities.get("generos"):
+        genres_num = get_genres_by_string(entities["generos"])
+        if genres_num:
+            genres_str = ','.join(map(str, genres_num))
+            if intencion == "NO_QUERER":
+                search_url += f"&without_genres={genres_str}"
+            else:
+                search_url += f"&with_genres={genres_str}"
+
+    all_people_ids = []
+    for grupo in ["actores", "directores"]:
+        if entities.get(grupo):
+            for nombre in entities[grupo]:
+                pid = get_person_id(nombre)
+                if pid: 
+                    all_people_ids.append(str(pid))
+    
+    if all_people_ids:
+        unique_people = list(set(all_people_ids))
+        if intencion == "NO_QUERER":
+            excluded_people_ids = unique_people
+        else:
+            search_url += f"&with_people={','.join(unique_people)}"
+
+    if entities.get("productoras"):
+        company_ids = []
+        for nombre in entities["productoras"]:
+            cid = get_company_id(nombre)
+            if cid: 
+                company_ids.append(str(cid))
+        if company_ids:
+            company_str = ','.join(company_ids)
+            if intencion == "NO_QUERER":
+                search_url += f"&without_companies={company_str}"
+            else:
+                search_url += f"&with_companies={company_str}"
+
+    if entities.get("temas"):
+        kw_ids = get_keyword_ids(entities["temas"])
+        if kw_ids:
+            kw_str = ','.join(kw_ids)
+            if intencion == "NO_QUERER":
+                search_url += f"&without_keywords={kw_str}"
+            else:
+                search_url += f"&with_keywords={kw_str}"
+
+    if entities.get("plataformas") and intencion != "NO_QUERER":
+        platform_ids = []
+        for nombre in entities["plataformas"]:
+            pid = get_provider_id(nombre)
+            if pid: 
+                platform_ids.append(str(pid))
+        if platform_ids:
+            search_url += f"&watch_region=ES&with_watch_providers={','.join(platform_ids)}"
+
+    try:
+        response = requests.get(search_url).json()
+        movies = response.get('results', [])
+        
+        if not movies:
+            return None
+
+        profile = load_user_profile()
+        scored_movies = []
+        
+        for movie in movies:
+            if intencion == "NO_QUERER" and excluded_people_ids:
+                credits_url = f"{BASE_URL}/movie/{movie['id']}/credits?api_key={TMDB_API_KEY}"
+                credits = requests.get(credits_url).json()
+                
+                cast_ids = [str(member['id']) for member in credits.get('cast', [])]
+                crew_ids = [str(member['id']) for member in credits.get('crew', [])]
+                all_movie_people = cast_ids + crew_ids
+                
+                if any(p_id in excluded_people_ids for p_id in all_movie_people):
+                    continue
+
+            score = calcular_puntuacion(movie, profile)
+            scored_movies.append({
+                "data": movie,
+                "score": score
+            })
+
+        scored_movies.sort(key=lambda x: x['score'], reverse=True)
+
+        top_3 = []
+        for item in scored_movies[:3]:
+            m = item['data']
+            top_3.append({
+                "title": m.get('title'),
+                "score": item['score'],
+                "overview": m.get('overview'),
+                "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}" if m.get('poster_path') else None,
+                "release": m.get('release_date')
+            })
+        return top_3
+
+    except Exception as e:
+        print(f"Error en la búsqueda combinada: {e}")
+        return None
