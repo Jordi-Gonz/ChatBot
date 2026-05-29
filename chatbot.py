@@ -118,7 +118,7 @@ def get_movie_details(movie_id):
     response = requests.get(url).json()
     return response
 
-def calcular_puntuacion(movie, profile):
+def calcular_puntuacion(movie, profile, es_descubrimiento=False):
     """Lógica heurística para decidir cuánto le gusta una peli al usuario."""
     details = get_movie_details(movie['id'])
     score = 0
@@ -126,7 +126,6 @@ def calcular_puntuacion(movie, profile):
     # Bonificación por Géneros
     movie_genre_ids = movie.get('genre_ids', [])
     for g_id in movie_genre_ids:
-        # Aquí necesitarías una función inversa que mapee ID de TMDB -> Nombre
         nombre_genero = get_string_by_genre(g_id)
         score += profile['afinidad_generos'].get(nombre_genero, 0)
 
@@ -137,7 +136,7 @@ def calcular_puntuacion(movie, profile):
         decada = f"{(int(año) // 10) * 10}"
         score += profile['afinidad_decadas'].get(decada, 0) * 2  # Peso doble
 
-    #Bonificación por tiempo de la película
+    # Bonificación por tiempo de la película
     runtime = details.get('runtime', 0)
     if runtime > 0:
         diff = abs(runtime - profile['estadisticas_generales']['media_tiempo'])
@@ -146,10 +145,13 @@ def calcular_puntuacion(movie, profile):
 
     movie_keywords = [k['name'].lower() for k in details.get('keywords', {}).get('keywords', [])]
 
-    #Bonificación por matríz de descubrimiento
+    # Bonificación por matriz de descubrimiento
+    # Si es_descubrimiento es True, aplicamos un multiplicador agresivo (ej. x5 en lugar de x2)
+    factor_multiplicador = 5.0 if es_descubrimiento else 2.0
+
     for gen_name, factor in profile['matriz_descubrimiento'].items():
         if gen_name.lower() in movie_keywords:
-            score += (factor * 2)
+            score += (factor * factor_multiplicador)
 
     return score
 
@@ -188,42 +190,57 @@ def get_provider_id(name, region="ES"):
             return p['provider_id']
     return None
 
-def search_discovery():
-    """Realiza una búsqueda exploratoria sin filtros restrictivos."""
-    # Buscamos películas de alta calidad (Top Tier)
-    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&sort_by=vote_average.desc&vote_average.gte=7.5&vote_count.gte=2000primary_release_date.gte=2025-01-01"
 
-    response = requests.get(search_url).json()
-    movies = response.get('results', [])
+def search_discovery():
+    """Realiza una búsqueda exploratoria filtrando por los 3 géneros top de descubrimiento."""
+    profile = load_user_profile()
+    matriz = profile.get('matriz_descubrimiento', {})
+
+    #Obtener los 3 géneros con mayor puntuación en la matriz de descubrimiento
+    top_3_generos_nombres = sorted(matriz, key=matriz.get, reverse=True)[:3]
+
+    top_3_ids = get_genres_by_string(top_3_generos_nombres)
+
+    genres_str = '|'.join(map(str, top_3_ids)) if top_3_ids else ""
+
+    #Construcción de la URL de TMDB con los géneros inyectados
+    url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&sort_by=vote_average.desc&vote_average.gte=7.5&vote_count.gte=2000&with_genres={genres_str}"
+
+    try:
+        response = requests.get(url).json()
+        movies = response.get('results', [])
+    except Exception as e:
+        print(f"Error en HTTP request de descubrimiento: {e}")
+        return None
 
     if not movies:
         return None
 
-    # Puntuamos las películas encontradas usando el perfil
+    #Puntuamos las películas forzando el peso de la matriz
     scored_movies = []
-    profile = load_user_profile()
     for movie in movies:
-        # Usamos tu función de scoring, que ya cruza géneros y década
-        score = calcular_puntuacion(movie, profile)
+        # Pasamos es_descubrimiento=True para activar el peso incrementado
+        score = calcular_puntuacion(movie, profile, es_descubrimiento=True)
         scored_movies.append({"data": movie, "score": score})
 
-    # Ordenamos y cogemos las mejores
+    # Ordenamos de mayor a menor coincidencia
     scored_movies.sort(key=lambda x: x['score'], reverse=True)
 
-    #Para "sorprender", en lugar de devolver la 1ª, elegimos al azar entre las 5 mejores
+    # Selección aleatoria de los candidatos top para mantener el factor "sorpresa"
     candidates = scored_movies[:5]
-    choice = random.choice(candidates)
+    if not candidates:
+        return None
 
-    top_3 = []
+    choice = random.choice(candidates)
     m = choice['data']
-    top_3.append({
+
+    return [{
         "title": m.get('title'),
         "score": choice['score'],
         "overview": m.get('overview'),
-        "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
+        "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}" if m.get('poster_path') else None,
         "release": m.get('release_date')
-    })
-    return top_3
+    }]
 
 def detect_entities(text_original):
     """Detecta entidades con lógica de prioridad literal, palabras clave clave y umbral dinámico."""
