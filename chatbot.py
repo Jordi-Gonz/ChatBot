@@ -47,7 +47,7 @@ def load_local_movie_data(filepath="DB/movie_dataset.json"):
         return set(), set(), set(), [], [], set(), {}, [], 0.7, []
 
 # Carga global del sistema
-(GENEROS, ACTORES, DIRECTORES, COLECCIONES, PRODUCTORAS, 
+(GENEROS, ACTORES, DIRECTORES, COLECCIONES, ESTUDIOS, 
  KEYWORDS, INTENCIONES, INT_GLOBALES, UMBRAL_DEFECTO, PLATAFORMAS) = load_local_movie_data()
 
 def analyze_intent_and_tags(text):
@@ -226,7 +226,7 @@ def search_discovery():
     return top_3
 
 def detect_entities(text_original):
-    """Detecta entidades con lógica de prioridad literal y umbral dinámico[cite: 1, 2]."""
+    """Detecta entidades con lógica de prioridad literal, palabras clave clave y umbral dinámico."""
     text_lower = text_original.lower()
     doc = nlp(text_lower)
     palabras_usuario = [t.text for t in doc if len(t.text) > 2]
@@ -236,18 +236,19 @@ def detect_entities(text_original):
         "generos": [g for g in lemas_usuario if g in GENEROS],
         "actores": [],
         "directores": [],
-        "sagas": [],
-        "productoras": [],
+        "estudios": [],
         "plataformas": [],
         "temas": []
     }
 
     # Definimos mapeo para iterar las listas que tienen lógica de umbral
     categorias = [
-        ("sagas", COLECCIONES),
         ("plataformas", PLATAFORMAS),
-        ("productoras", PRODUCTORAS)
+        ("estudios", ESTUDIOS)
     ]
+
+    # Palabras irrelevantes que no deben activar una búsqueda por sí solas
+    STOP_WORDS_ENTIDADES = {"studio", "studios", "pictures", "films", "entertainment", "productions", "cine", "cinema"}
 
     for clave_res, lista_datos in categorias:
         for item in lista_datos:
@@ -261,18 +262,26 @@ def detect_entities(text_original):
 
             if not nombre_entidad: continue
 
-            # 1. Prioridad Literal: Si el nombre está tal cual en la frase
             if nombre_entidad in text_lower:
                 res[clave_res].append(nombre_entidad.title())
                 continue 
             
-            # 2. Respaldo Flexible: Para nombres largos con umbral bajo[cite: 1]
+            palabras_entidad = nombre_entidad.split()
+            if len(palabras_entidad) > 1:
+                palabras_significativas = [w for w in palabras_entidad if w not in STOP_WORDS_ENTIDADES and len(w) > 3]
+                
+                if any(w in text_lower for w in palabras_significativas):
+                    res[clave_res].append(nombre_entidad.title())
+                    continue
+
+            # 2. Respaldo Flexible: Para nombres largos con umbral bajo
             if threshold < 0.5:
                 palabras_clave = [w for w in nombre_entidad.split() if len(w) > 4]
                 if any(w in text_lower for w in palabras_clave):
                     res[clave_res].append(nombre_entidad.title())
+                    continue
             
-            # 3. Respaldo Fuzzy: Similitud difusa para errores ortográficos[cite: 1]
+            # 3. Respaldo Fuzzy: Similitud difusa para errores ortográficos
             else:
                 if fuzzy_match(text_lower, nombre_entidad, threshold):
                     res[clave_res].append(nombre_entidad.title())
@@ -282,17 +291,13 @@ def detect_entities(text_original):
             res["actores"].append(a.title())
     for d in DIRECTORES:
         if d.lower() in text_lower:
-            res["actores"].append(d.title())
+            res["directores"].append(d.title())
             
     # Temas/Keywords
     for k in KEYWORDS:
         k_lower = k.lower()
-        
-        # Caso 1: La keyword de tu DB está tal cual en el texto del usuario
-        # Ejemplo: El usuario escribió "Me gusta el marvel cinematic universe"
         if k_lower in text_lower:
             res["temas"].append(k)
-            
         elif len(k_lower.split()) > 1:
             palabras_clave_db = [w for w in k_lower.split() if len(w) > 4 or w == "dc"]
             if any(w in text_lower for w in palabras_clave_db):
@@ -359,7 +364,7 @@ def get_movie_details(movie_id):
 def search_by_all_entities(entities, intencion="QUERER"):
     """
     Construye una búsqueda combinando dinámicamente todas las entidades detectadas.
-    Soporta inclusión (QUERER) y exclusión (NO_QUERER) de entidades basándose en la intención.
+    Soporta inclusión (QUERER) y exclusión (NO_QUERER) de entidades.
     """
 
     if intencion == "DESCUBRIR" and not any(entities.values()):
@@ -368,6 +373,7 @@ def search_by_all_entities(entities, intencion="QUERER"):
     search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false&sort_by=popularity.desc"
     
     excluded_people_ids = []
+    excluded_movie_ids = []
 
     if entities.get("generos"):
         genres_num = get_genres_by_string(entities["generos"])
@@ -393,9 +399,9 @@ def search_by_all_entities(entities, intencion="QUERER"):
         else:
             search_url += f"&with_people={','.join(unique_people)}"
 
-    if entities.get("productoras"):
+    if entities.get("estudios"):
         company_ids = []
-        for nombre in entities["productoras"]:
+        for nombre in entities["estudios"]:
             cid = get_company_id(nombre)
             if cid: 
                 company_ids.append(str(cid))
@@ -435,6 +441,9 @@ def search_by_all_entities(entities, intencion="QUERER"):
         scored_movies = []
         
         for movie in movies:
+            if intencion == "NO_QUERER" and movie['id'] in excluded_movie_ids:
+                continue
+
             if intencion == "NO_QUERER" and excluded_people_ids:
                 credits_url = f"{BASE_URL}/movie/{movie['id']}/credits?api_key={TMDB_API_KEY}"
                 credits = requests.get(credits_url).json()
@@ -446,6 +455,7 @@ def search_by_all_entities(entities, intencion="QUERER"):
                 if any(p_id in excluded_people_ids for p_id in all_movie_people):
                     continue
 
+            # Si pasa ambos filtros, calculamos su afinidad
             score = calcular_puntuacion(movie, profile)
             scored_movies.append({
                 "data": movie,

@@ -86,8 +86,7 @@ def run_gui():
                         if entities.get("generos"): avisos_lista.append(f"🎬 Género: {', '.join(entities['generos'])}")
                         if entities.get("actores"): avisos_lista.append(f"🎭 Actor: {', '.join(entities['actores'])}")
                         if entities.get("directores"): avisos_lista.append(f"🎥 Director: {', '.join(entities['directores'])}")
-                        if entities.get("sagas"): avisos_lista.append(f"📚 Saga: {', '.join(entities['sagas'])}")
-                        if entities.get("productoras"): avisos_lista.append(f"🏢 Productora: {', '.join(entities['productoras'])}")
+                        if entities.get("estudios"): avisos_lista.append(f"🏢 Productora: {', '.join(entities['estudios'])}")
                         if entities.get("temas"): avisos_lista.append(f"🏷️ Tema: {', '.join(entities['temas'])}")
                         if entities.get("plataformas"): avisos_lista.append(f"📺 Plataforma: {', '.join(entities['plataformas'])}")
                         
