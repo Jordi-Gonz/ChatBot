@@ -2156,7 +2156,6 @@
         { "nombre": "saban films", "umbral": 0.9 },
         { "nombre": "millennium media", "umbral": 0.9 },
         { "nombre": "sony pictures", "umbral": 0.7 },
-        { "nombre": "walt disney", "umbral": 0.6 },
         { "nombre": "dc studios", "umbral": 0.6 },
         { "nombre": "kadokawa", "umbral": 0.7 },
         { "nombre": "destination films", "umbral": 0.9 },

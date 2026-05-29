@@ -1,5 +1,5 @@
 import streamlit as st
-from chatbot import detect_entities, analyze_intent_and_tags, search_by_all_entities
+from chatbot import detect_entities, analyze_intent_and_tags, search_by_all_entities, registrar_en_blacklist
 from data import nuevo_usuario
 
 
@@ -30,6 +30,7 @@ def run_gui():
         st.title("⚙️ Configuración")
         if "letterboxd_user" not in st.session_state:
             st.session_state.letterboxd_user = ""
+            nuevo_usuario(None)
 
         user_input = st.text_input("Usuario de Letterboxd", value=st.session_state.letterboxd_user)
         if st.button("Guardar Usuario"):
@@ -76,6 +77,11 @@ def run_gui():
             if any(entities.values()) or intencion == "DESCUBRIR":
                 if intencion == "CONTRADICCION":
                     respuesta = "Antes de escribir el mensaje aclarate, por favor..."
+                    st.markdown(respuesta)
+                    new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent, "tags_detected": tags}
+                elif intencion == "NO_QUERER":
+                    registrar_en_blacklist(entities)
+                    respuesta = "Lo tendré en cuenta."
                     st.markdown(respuesta)
                     new_msg = {"role": "assistant", "content": respuesta, "intent_display": display_intent, "tags_detected": tags}
                 else:

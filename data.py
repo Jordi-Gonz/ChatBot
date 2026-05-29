@@ -137,153 +137,184 @@ def obtener_lista(usuario):
     lista_vistas = [r for r in resultados]
 
 def nuevo_usuario(usuario):
-    inicio = time.time()
-    obtener_lista(usuario)
-    fin = time.time()
+    if not usuario:
+        genre_vacio = {g: 0.0 for g in GENRES}
+        decade_vacia = {str(y): 0.0 for y in YEARS}
 
-    print(fin - inicio)
-
-    genre_data = []
-
-    for item in GENRES:
-        total = 0
-        total_rating = 0
-        rating = 0
-        global_rating = 0
-        genre = {}
-        for p in lista_vistas:
-            if item in p['genres']:
-                total += 1
-                if p['rating'] is not None:
-                    total_rating += 1
-                    rating += p['rating']
-
-                global_rating += p['global-rating']
-
-        if total == 0:
-            genre = {
-                'genre': item,
-                'total': total,
-                'total_rating': total_rating,
-                'rating': 0,
-                'global-rating': 0
+        resultados_finales = {
+            "usuario": "Guest",
+            "estadisticas_generales": {
+                "media_tiempo": 0.0,
+                "media_global": 0.0,
+                "media_vistas": 0.0
+            },
+            "afinidad_generos": genre_vacio,
+            "afinidad_decadas": decade_vacia,
+            "matriz_descubrimiento": genre_vacio,
+            "blacklist": {
+                "generos": [],
+                "actores": [],
+                "directores": [],
+                "estudios": [],
+                "temas": []
             }
-        else:
-            if total_rating == 0:
+        }
+
+    else:
+        inicio = time.time()
+        obtener_lista(usuario)
+        fin = time.time()
+
+        print(fin - inicio)
+
+        genre_data = []
+
+        for item in GENRES:
+            total = 0
+            total_rating = 0
+            rating = 0
+            global_rating = 0
+            genre = {}
+            for p in lista_vistas:
+                if item in p['genres']:
+                    total += 1
+                    if p['rating'] is not None:
+                        total_rating += 1
+                        rating += p['rating']
+
+                    global_rating += p['global-rating']
+
+            if total == 0:
                 genre = {
                     'genre': item,
                     'total': total,
-                    'total-rating': total_rating,
+                    'total_rating': total_rating,
                     'rating': 0,
-                    'global-rating': round(global_rating / total, 3)
+                    'global-rating': 0
                 }
             else:
-                genre = {
-                    'genre': item,
+                if total_rating == 0:
+                    genre = {
+                        'genre': item,
+                        'total': total,
+                        'total-rating': total_rating,
+                        'rating': 0,
+                        'global-rating': round(global_rating / total, 3)
+                    }
+                else:
+                    genre = {
+                        'genre': item,
+                        'total': total,
+                        'total-rating': total_rating,
+                        'rating': round(rating / total_rating, 3),
+                        'global-rating': round(global_rating / total, 3)
+                    }
+
+            genre_data.append(genre)
+
+        decade_data = []
+
+        for item in YEARS:
+            total = 0
+            total_rating = 0
+            rating = 0
+            global_rating = 0
+            decade = {}
+            for p in lista_vistas:
+                if p['year'] >= item and p['year'] < item + 10:
+                    total += 1
+                    if p['rating'] is not None:
+                        total_rating += 1
+                        rating += p['rating']
+                    global_rating += p['global-rating']
+
+            if total == 0:
+                decade = {
+                    'decade': item,
                     'total': total,
                     'total-rating': total_rating,
-                    'rating': round(rating / total_rating, 3),
-                    'global-rating': round(global_rating / total, 3)
+                    'rating': 0,
+                    'global-rating': 0
                 }
+            else:
+                if total_rating == 0:
+                    decade = {
+                        'decade': item,
+                        'total': total,
+                        'rating': 0,
+                        'global-rating': round(global_rating / total, 3)
+                    }
+                else:
+                    decade = {
+                        'decade': item,
+                        'total': total,
+                        'rating': round(rating / total_rating, 3),
+                        'global-rating': round(global_rating / total, 3)
+                    }
 
-        genre_data.append(genre)
+            decade_data.append(decade)
 
-    decade_data = []
+        df = pd.DataFrame(lista_vistas)
 
-    for item in YEARS:
-        total = 0
-        total_rating = 0
-        rating = 0
-        global_rating = 0
-        decade = {}
-        for p in lista_vistas:
-            if p['year'] >= item and p['year'] < item + 10:
-                total += 1
-                if p['rating'] is not None:
-                    total_rating += 1
-                    rating += p['rating']
-                global_rating += p['global-rating']
+        media_time = df['time'].mean()
+        media_global = df['global-rating'].mean()
+        media_vistas = df['vistas'].mean()
 
-        if total == 0:
-            decade = {
-                'decade': item,
-                'total': total,
-                'total-rating': total_rating,
-                'rating': 0,
-                'global-rating': 0
+        df_genre = pd.DataFrame(genre_data)
+        df_year = pd.DataFrame(decade_data)
+
+        max_vistas_genre = df_genre['total'].max() if df_genre['total'].max() > 0 else 1
+        max_rating_genre = df_genre['rating'].max() if df_genre['rating'].max() > 0 else 1
+        max_vistas_year = df_year['total'].max() if df_year['total'].max() > 0 else 1
+        max_rating_year = df_year['rating'].max() if df_year['rating'].max() > 0 else 1
+
+        genre_afinidad = {}
+        year_afinidad = {}
+        matriz_descubrir = {}
+
+        for d in genre_data:
+            if d['rating'] == 0 and d['total'] > 0:
+                score_nota = 0.5
+            else:
+                score_nota = d['rating'] / max_rating_genre
+
+            score = (score_nota * 0.7) + (d['total'] / max_vistas_genre * 0.3)
+            genre_afinidad[d['genre']] = float(round(score, 3))
+
+            factor_novedad = 1 - (d['total'] / max_vistas_genre)
+
+            interes_potencial = d['global-rating'] / 5.0
+
+            score_descubrimiento = (factor_novedad * 0.8) + (interes_potencial * 0.2)
+            matriz_descubrir[d['genre']] = float(round(score_descubrimiento, 3))
+
+        for d in decade_data:
+            if d['rating'] == 0 and d['total'] > 0:
+                score_nota = 0.5
+            else:
+                score_nota = d['rating'] / max_rating_year
+
+            score = (score_nota * 0.7) + (d['total'] / max_vistas_year * 0.3)
+            year_afinidad[d['decade']] = float(round(score, 3))
+
+        resultados_finales = {
+            "usuario": usuario,
+            "estadisticas_generales": {
+                "media_tiempo": media_time,
+                "media_global": media_global,
+                "media_vistas": media_vistas
+            },
+            "afinidad_generos": genre_afinidad,
+            "afinidad_decadas": year_afinidad,
+            "matriz_descubrimiento": matriz_descubrir,
+            "blacklist": {
+                "generos": [],
+                "actores": [],
+                "directores": [],
+                "estudios": [],
+                "temas": []
             }
-        else:
-            if total_rating == 0:
-                decade = {
-                    'decade': item,
-                    'total': total,
-                    'rating': 0,
-                    'global-rating': round(global_rating / total, 3)
-                }
-            else:
-                decade = {
-                    'decade': item,
-                    'total': total,
-                    'rating': round(rating / total_rating, 3),
-                    'global-rating': round(global_rating / total, 3)
-                }
-
-        decade_data.append(decade)
-
-    df = pd.DataFrame(lista_vistas)
-
-    media_time = df['time'].mean()
-    media_global = df['global-rating'].mean()
-    media_vistas = df['vistas'].mean()
-
-    df_genre = pd.DataFrame(genre_data)
-    df_year = pd.DataFrame(decade_data)
-
-    max_vistas_genre = df_genre['total'].max() if df_genre['total'].max() > 0 else 1
-    max_rating_genre = df_genre['rating'].max() if df_genre['rating'].max() > 0 else 1
-    max_vistas_year = df_year['total'].max() if df_year['total'].max() > 0 else 1
-    max_rating_year = df_year['rating'].max() if df_year['rating'].max() > 0 else 1
-
-    genre_afinidad = {}
-    year_afinidad = {}
-    matriz_descubrir = {}
-
-    for d in genre_data:
-        if d['rating'] == 0 and d['total'] > 0:
-            score_nota = 0.5
-        else:
-            score_nota = d['rating'] / max_rating_genre
-
-        score = (score_nota * 0.7) + (d['total'] / max_vistas_genre * 0.3)
-        genre_afinidad[d['genre']] = float(round(score, 3))
-
-        factor_novedad = 1 - (d['total'] / max_vistas_genre)
-
-        interes_potencial = d['global-rating'] / 5.0
-
-        score_descubrimiento = (factor_novedad * 0.8) + (interes_potencial * 0.2)
-        matriz_descubrir[d['genre']] = float(round(score_descubrimiento, 3))
-
-    for d in decade_data:
-        if d['rating'] == 0 and d['total'] > 0:
-            score_nota = 0.5
-        else:
-            score_nota = d['rating'] / max_rating_year
-
-        score = (score_nota * 0.7) + (d['total'] / max_vistas_year * 0.3)
-        year_afinidad[d['decade']] = float(round(score, 3))
-
-    resultados_finales = {
-        "usuario": usuario,
-        "estadisticas_generales": {
-            "media_tiempo": media_time,
-            "media_global": media_global,
-            "media_vistas": media_vistas
-        },
-        "afinidad_generos": genre_afinidad,
-        "afinidad_decadas": year_afinidad,
-        "matriz_descubrimiento": matriz_descubrir
-    }
+        }
 
     # Guardamos en un archivo JSON
     with open('DB/datos_letterboxd.json', 'w', encoding='utf-8') as f:

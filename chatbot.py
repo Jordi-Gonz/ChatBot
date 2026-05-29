@@ -118,40 +118,60 @@ def get_movie_details(movie_id):
     response = requests.get(url).json()
     return response
 
-def calcular_puntuacion(movie, profile, es_descubrimiento=False):
-    """Lógica heurística para decidir cuánto le gusta una peli al usuario."""
+def calcular_puntuacion(movie, profile):
+    """Lógica heurística unificada para decidir cuánto le gusta una peli al usuario,
+    calculando bonificaciones y penalizaciones de géneros en un solo bucle.
+    """
     details = get_movie_details(movie['id'])
     score = 0
-
-    # Bonificación por Géneros
+    
+    blacklist = profile.get("blacklist", {})
+    blacklist_generos = get_genres_by_string(blacklist.get("generos", []))
+    blacklist_temas = [t.lower() for t in blacklist.get("temas", [])]
+    blacklist_actores = [a.lower() for a in blacklist.get("actores", [])]
+    blacklist_directores = [d.lower() for d in blacklist.get("directores", [])]
+    
     movie_genre_ids = movie.get('genre_ids', [])
+    movie_keywords = [k['name'].lower() for k in details.get('keywords', {}).get('keywords', [])]
+
+    for g_id in blacklist_generos:
+        if g_id in movie_genre_ids:
+            score -= 100
+
     for g_id in movie_genre_ids:
         nombre_genero = get_string_by_genre(g_id)
         score += profile['afinidad_generos'].get(nombre_genero, 0)
 
-    # Bonificación por Década
+    for kw in movie_keywords:
+        if kw in blacklist_temas:
+            score -= 50
+
+    if blacklist_actores or blacklist_directores:
+        try:
+            credits_url = f"{BASE_URL}/movie/{movie['id']}/credits?api_key={TMDB_API_KEY}"
+            credits = requests.get(credits_url).json()
+            
+            cast_names = [member['name'].lower() for member in credits.get('cast', [])]
+            if any(actor in cast_names for actor in blacklist_actores):
+                score -= 150
+                
+            crew_directors = [member['name'].lower() for member in credits.get('crew', []) if member.get('job') == 'Director']
+            if any(director in crew_directors for director in blacklist_directores):
+                score -= 150
+        except Exception as e:
+            pass
+
     release = movie.get('release_date', '')
     if release:
         año = release[:4]
         decada = f"{(int(año) // 10) * 10}"
-        score += profile['afinidad_decadas'].get(decada, 0) * 2  # Peso doble
+        score += profile['afinidad_decadas'].get(decada, 0) * 2
 
-    # Bonificación por tiempo de la película
     runtime = details.get('runtime', 0)
     if runtime > 0:
         diff = abs(runtime - profile['estadisticas_generales']['media_tiempo'])
         if diff < 20:
             score += 1.5
-
-    movie_keywords = [k['name'].lower() for k in details.get('keywords', {}).get('keywords', [])]
-
-    # Bonificación por matriz de descubrimiento
-    # Si es_descubrimiento es True, aplicamos un multiplicador agresivo (ej. x5 en lugar de x2)
-    factor_multiplicador = 5.0 if es_descubrimiento else 2.0
-
-    for gen_name, factor in profile['matriz_descubrimiento'].items():
-        if gen_name.lower() in movie_keywords:
-            score += (factor * factor_multiplicador)
 
     return score
 
@@ -165,6 +185,40 @@ def get_person_id(name):
     if response.get('results'):
         return response['results'][0]['id']
     return None
+
+def save_user_profile(profile, filepath="DB/datos_letterboxd.json"):
+    """Guarda el objeto perfil de usuario actualizado en el archivo JSON."""
+    try:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            # indent=4 mantiene el archivo legible para humanos
+            json.dump(profile, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"Error al guardar el archivo de perfil: {e}")
+
+def registrar_en_blacklist(entities):
+    """Inserta de forma permanente las entidades detectadas en la lista negra del JSON."""
+    profile = load_user_profile()
+    
+    if "blacklist" not in profile:
+        profile["blacklist"] = {
+            "generos": [],
+            "actores": [],
+            "directores": [],
+            "estudios": [],
+            "temas": []
+        }
+        
+    blacklist = profile["blacklist"]
+    
+    for clave_entidad, valores in entities.items():
+        if clave_entidad in blacklist and valores:
+            elementos_actuales = {elem.lower() for elem in blacklist[clave_entidad]}
+            
+            for item in valores:
+                if item.lower() not in elementos_actuales:
+                    blacklist[clave_entidad].append(item)
+                    
+    save_user_profile(profile)
 
 def get_collection_id(name):
     url = f"{BASE_URL}/search/collection?api_key={TMDB_API_KEY}&query={name}&language=es-ES"
@@ -190,57 +244,42 @@ def get_provider_id(name, region="ES"):
             return p['provider_id']
     return None
 
-
 def search_discovery():
-    """Realiza una búsqueda exploratoria filtrando por los 3 géneros top de descubrimiento."""
-    profile = load_user_profile()
-    matriz = profile.get('matriz_descubrimiento', {})
+    """Realiza una búsqueda exploratoria sin filtros restrictivos."""
+    # Buscamos películas de alta calidad (Top Tier)
+    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&sort_by=vote_average.desc&vote_average.gte=7.5&vote_count.gte=2000primary_release_date.gte=2025-01-01"
 
-    #Obtener los 3 géneros con mayor puntuación en la matriz de descubrimiento
-    top_3_generos_nombres = sorted(matriz, key=matriz.get, reverse=True)[:3]
-
-    top_3_ids = get_genres_by_string(top_3_generos_nombres)
-
-    genres_str = '|'.join(map(str, top_3_ids)) if top_3_ids else ""
-
-    #Construcción de la URL de TMDB con los géneros inyectados
-    url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&sort_by=vote_average.desc&vote_average.gte=7.5&vote_count.gte=2000&with_genres={genres_str}"
-
-    try:
-        response = requests.get(url).json()
-        movies = response.get('results', [])
-    except Exception as e:
-        print(f"Error en HTTP request de descubrimiento: {e}")
-        return None
+    response = requests.get(search_url).json()
+    movies = response.get('results', [])
 
     if not movies:
         return None
 
-    #Puntuamos las películas forzando el peso de la matriz
+    # Puntuamos las películas encontradas usando el perfil
     scored_movies = []
+    profile = load_user_profile()
     for movie in movies:
-        # Pasamos es_descubrimiento=True para activar el peso incrementado
-        score = calcular_puntuacion(movie, profile, es_descubrimiento=True)
+        # Usamos tu función de scoring, que ya cruza géneros y década
+        score = calcular_puntuacion(movie, profile)
         scored_movies.append({"data": movie, "score": score})
 
-    # Ordenamos de mayor a menor coincidencia
+    # Ordenamos y cogemos las mejores
     scored_movies.sort(key=lambda x: x['score'], reverse=True)
 
-    # Selección aleatoria de los candidatos top para mantener el factor "sorpresa"
+    #Para "sorprender", en lugar de devolver la 1ª, elegimos al azar entre las 5 mejores
     candidates = scored_movies[:5]
-    if not candidates:
-        return None
-
     choice = random.choice(candidates)
-    m = choice['data']
 
-    return [{
+    top_3 = []
+    m = choice['data']
+    top_3.append({
         "title": m.get('title'),
         "score": choice['score'],
         "overview": m.get('overview'),
-        "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}" if m.get('poster_path') else None,
+        "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path')}",
         "release": m.get('release_date')
-    }]
+    })
+    return top_3
 
 def detect_entities(text_original):
     """Detecta entidades con lógica de prioridad literal, palabras clave clave y umbral dinámico."""
@@ -388,18 +427,12 @@ def search_by_all_entities(entities, intencion="QUERER"):
         return search_discovery()
 
     search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false&sort_by=popularity.desc"
-    
-    excluded_people_ids = []
-    excluded_movie_ids = []
 
     if entities.get("generos"):
         genres_num = get_genres_by_string(entities["generos"])
         if genres_num:
             genres_str = ','.join(map(str, genres_num))
-            if intencion == "NO_QUERER":
-                search_url += f"&without_genres={genres_str}"
-            else:
-                search_url += f"&with_genres={genres_str}"
+            search_url += f"&with_genres={genres_str}"
 
     all_people_ids = []
     for grupo in ["actores", "directores"]:
@@ -411,10 +444,7 @@ def search_by_all_entities(entities, intencion="QUERER"):
     
     if all_people_ids:
         unique_people = list(set(all_people_ids))
-        if intencion == "NO_QUERER":
-            excluded_people_ids = unique_people
-        else:
-            search_url += f"&with_people={','.join(unique_people)}"
+        search_url += f"&with_people={','.join(unique_people)}"
 
     if entities.get("estudios"):
         company_ids = []
@@ -424,21 +454,15 @@ def search_by_all_entities(entities, intencion="QUERER"):
                 company_ids.append(str(cid))
         if company_ids:
             company_str = ','.join(company_ids)
-            if intencion == "NO_QUERER":
-                search_url += f"&without_companies={company_str}"
-            else:
-                search_url += f"&with_companies={company_str}"
+            search_url += f"&with_companies={company_str}"
 
     if entities.get("temas"):
         kw_ids = get_keyword_ids(entities["temas"])
         if kw_ids:
             kw_str = ','.join(kw_ids)
-            if intencion == "NO_QUERER":
-                search_url += f"&without_keywords={kw_str}"
-            else:
-                search_url += f"&with_keywords={kw_str}"
+            search_url += f"&with_keywords={kw_str}"
 
-    if entities.get("plataformas") and intencion != "NO_QUERER":
+    if entities.get("plataformas"):
         platform_ids = []
         for nombre in entities["plataformas"]:
             pid = get_provider_id(nombre)
@@ -458,21 +482,6 @@ def search_by_all_entities(entities, intencion="QUERER"):
         scored_movies = []
         
         for movie in movies:
-            if intencion == "NO_QUERER" and movie['id'] in excluded_movie_ids:
-                continue
-
-            if intencion == "NO_QUERER" and excluded_people_ids:
-                credits_url = f"{BASE_URL}/movie/{movie['id']}/credits?api_key={TMDB_API_KEY}"
-                credits = requests.get(credits_url).json()
-                
-                cast_ids = [str(member['id']) for member in credits.get('cast', [])]
-                crew_ids = [str(member['id']) for member in credits.get('crew', [])]
-                all_movie_people = cast_ids + crew_ids
-                
-                if any(p_id in excluded_people_ids for p_id in all_movie_people):
-                    continue
-
-            # Si pasa ambos filtros, calculamos su afinidad
             score = calcular_puntuacion(movie, profile)
             scored_movies.append({
                 "data": movie,
