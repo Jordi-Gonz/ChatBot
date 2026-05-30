@@ -1,0 +1,1382 @@
+[
+    {
+        "palabra": "supervivencia",
+        "palabra_api": "survival"
+    },
+    {
+        "palabra": "sobrevivir",
+        "palabra_api": "survival"
+    },
+    {
+        "palabra": "supervivientes",
+        "palabra_api": "isolated survivors"
+    },
+    {
+        "palabra": "instinto de supervivencia",
+        "palabra_api": "survival instinct"
+    },
+    {
+        "palabra": "reglas de supervivencia",
+        "palabra_api": "rules of survival"
+    },
+    {
+        "palabra": "lucha por sobrevivir",
+        "palabra_api": "fight for survival"
+    },
+    {
+        "palabra": "misión de supervivencia",
+        "palabra_api": "survival mission"
+    },
+    {
+        "palabra": "terror de supervivencia",
+        "palabra_api": "survival horror"
+    },
+    {
+        "palabra": "thriller de supervivencia",
+        "palabra_api": "survival thriller"
+    },
+    {
+        "palabra": "familia sobreviviendo",
+        "palabra_api": "family survival"
+    },
+    {
+        "palabra": "supervivencia familiar",
+        "palabra_api": "family survival"
+    },
+    {
+        "palabra": "náufragos",
+        "palabra_api": "stranded"
+    },
+    {
+        "palabra": "varados",
+        "palabra_api": "stranded"
+    },
+    {
+        "palabra": "isla desierta",
+        "palabra_api": "deserted island"
+    },
+    {
+        "palabra": "entorno hostil",
+        "palabra_api": "hostile terrain"
+    },
+    {
+        "palabra": "naturaleza hostil",
+        "palabra_api": "hostile wilderness warfare"
+    },
+    {
+        "palabra": "ambiente duro",
+        "palabra_api": "harsh environment"
+    },
+    {
+        "palabra": "amenaza constante",
+        "palabra_api": "constant threat"
+    },
+    {
+        "palabra": "peligro impredecible",
+        "palabra_api": "unpredictable danger"
+    },
+    {
+        "palabra": "territorio hostil",
+        "palabra_api": "hostile territory"
+    },
+    {
+        "palabra": "rescate",
+        "palabra_api": "rescue"
+    },
+    {
+        "palabra": "misión de rescate",
+        "palabra_api": "rescue mission"
+    },
+    {
+        "palabra": "evacuación",
+        "palabra_api": "evacuation"
+    },
+    {
+        "palabra": "expedición",
+        "palabra_api": "expedition"
+    },
+    {
+        "palabra": "búsqueda",
+        "palabra_api": "quest"
+    },
+    {
+        "palabra": "viaje",
+        "palabra_api": "journey"
+    },
+    {
+        "palabra": "escape",
+        "palabra_api": "escape"
+    },
+    {
+        "palabra": "carrera contrarreloj",
+        "palabra_api": "race against time"
+    },
+    {
+        "palabra": "sci fi",
+        "palabra_api": "sci-fi adventure"
+    },
+    {
+        "palabra": "espacio",
+        "palabra_api": "space"
+    },
+    {
+        "palabra": "aventura espacial",
+        "palabra_api": "space adventure"
+    },
+    {
+        "palabra": "viaje espacial",
+        "palabra_api": "space travel"
+    },
+    {
+        "palabra": "misión espacial",
+        "palabra_api": "space mission"
+    },
+    {
+        "palabra": "batalla espacial",
+        "palabra_api": "space battle"
+    },
+    {
+        "palabra": "ópera espacial",
+        "palabra_api": "space opera"
+    },
+    {
+        "palabra": "estación espacial",
+        "palabra_api": "space station"
+    },
+    {
+        "palabra": "colonia espacial",
+        "palabra_api": "space colony"
+    },
+    {
+        "palabra": "nave espacial",
+        "palabra_api": "spaceship"
+    },
+    {
+        "palabra": "nave",
+        "palabra_api": "spacecraft"
+    },
+    {
+        "palabra": "galaxia",
+        "palabra_api": "galaxy"
+    },
+    {
+        "palabra": "planeta alienígena",
+        "palabra_api": "alien planet"
+    },
+    {
+        "palabra": "alienígenas",
+        "palabra_api": "alien"
+    },
+    {
+        "palabra": "alien",
+        "palabra_api": "alien"
+    },
+    {
+        "palabra": "invasión alienígena",
+        "palabra_api": "alien invasion"
+    },
+    {
+        "palabra": "amenaza extraterrestre",
+        "palabra_api": "extraterrestrial threat"
+    },
+    {
+        "palabra": "agujero negro",
+        "palabra_api": "black hole"
+    },
+    {
+        "palabra": "agujero de gusano",
+        "palabra_api": "wormhole"
+    },
+    {
+        "palabra": "realidad virtual",
+        "palabra_api": "virtual reality"
+    },
+    {
+        "palabra": "realidad simulada",
+        "palabra_api": "simulated reality "
+    },
+    {
+        "palabra": "realidad alternativa",
+        "palabra_api": "alternative reality"
+    },
+    {
+        "palabra": "realidad paralela",
+        "palabra_api": "parallel world"
+    },
+    {
+        "palabra": "universo alternativo",
+        "palabra_api": "alternate universe"
+    },
+    {
+        "palabra": "línea temporal alternativa",
+        "palabra_api": "alternate timeline"
+    },
+    {
+        "palabra": "dimensión alternativa",
+        "palabra_api": "alternate dimension"
+    },
+    {
+        "palabra": "viaje interdimensional",
+        "palabra_api": "interdimensional travel"
+    },
+    {
+        "palabra": "viaje en el tiempo",
+        "palabra_api": "time travel"
+    },
+    {
+        "palabra": "viajes en el tiempo",
+        "palabra_api": "time travel"
+    },
+    {
+        "palabra": "máquina del tiempo",
+        "palabra_api": "time machine"
+    },
+    {
+        "palabra": "paradoja temporal",
+        "palabra_api": "time paradox"
+    },
+    {
+        "palabra": "manipulación del tiempo",
+        "palabra_api": "time-manipulation"
+    },
+    {
+        "palabra": "inteligencia artificial",
+        "palabra_api": "artificial intelligence (a.i.)"
+    },
+    {
+        "palabra": "ia",
+        "palabra_api": "artificial intelligence (a.i.)"
+    },
+    {
+        "palabra": "robot",
+        "palabra_api": "robot"
+    },
+    {
+        "palabra": "robots",
+        "palabra_api": "robot"
+    },
+    {
+        "palabra": "androide",
+        "palabra_api": "android horror"
+    },
+    {
+        "palabra": "robot sensible",
+        "palabra_api": "sentient robot"
+    },
+    {
+        "palabra": "robótica avanzada",
+        "palabra_api": "advanced robotics"
+    },
+    {
+        "palabra": "transhumanismo",
+        "palabra_api": "transhumanism"
+    },
+    {
+        "palabra": "futuro",
+        "palabra_api": "future"
+    },
+    {
+        "palabra": "futuro cercano",
+        "palabra_api": "near future"
+    },
+    {
+        "palabra": "futuro lejano",
+        "palabra_api": "distant future"
+    },
+    {
+        "palabra": "futuro distópico",
+        "palabra_api": "dystopian future"
+    },
+    {
+        "palabra": "ciberpunk",
+        "palabra_api": "cyberpunk"
+    },
+    {
+        "palabra": "distopía",
+        "palabra_api": "dystopia"
+    },
+    {
+        "palabra": "distópica",
+        "palabra_api": "dystopian"
+    },
+    {
+        "palabra": "postapocalíptico",
+        "palabra_api": "post-apocalyptic future"
+    },
+    {
+        "palabra": "post apocalíptico",
+        "palabra_api": "post-apocalyptic future"
+    },
+    {
+        "palabra": "apocalipsis zombie",
+        "palabra_api": "zombie apocalypse"
+    },
+    {
+        "palabra": "zombies",
+        "palabra_api": "zombie"
+    },
+    {
+        "palabra": "zombie",
+        "palabra_api": "zombie"
+    },
+    {
+        "palabra": "sustos",
+        "palabra_api": "horror"
+    },
+    {
+        "palabra": "terror psicológico",
+        "palabra_api": "psychological horror"
+    },
+    {
+        "palabra": "thriller psicológico",
+        "palabra_api": "psychological thriller"
+    },
+    {
+        "palabra": "tensión psicológica",
+        "palabra_api": "psychological tension"
+    },
+    {
+        "palabra": "fenómenos paranormales",
+        "palabra_api": "paranormal phenomena"
+    },
+    {
+        "palabra": "paranormal",
+        "palabra_api": "paranormal phenomena"
+    },
+    {
+        "palabra": "sobrenatural",
+        "palabra_api": "supernatural"
+    },
+    {
+        "palabra": "terror sobrenatural",
+        "palabra_api": "supernatural horror"
+    },
+    {
+        "palabra": "posesión",
+        "palabra_api": "possession"
+    },
+    {
+        "palabra": "posesión demoníaca",
+        "palabra_api": "demonic possession"
+    },
+    {
+        "palabra": "demonio",
+        "palabra_api": "demon"
+    },
+    {
+        "palabra": "demonios",
+        "palabra_api": "demon"
+    },
+    {
+        "palabra": "espíritu demoníaco",
+        "palabra_api": "demonic spirit"
+    },
+    {
+        "palabra": "exorcismo",
+        "palabra_api": "exorcism"
+    },
+    {
+        "palabra": "exorcista",
+        "palabra_api": "exorcist"
+    },
+    {
+        "palabra": "fantasma",
+        "palabra_api": "ghost"
+    },
+    {
+        "palabra": "fantasmas",
+        "palabra_api": "ghost"
+    },
+    {
+        "palabra": "pueblo fantasma",
+        "palabra_api": "ghost town"
+    },
+    {
+        "palabra": "bruja",
+        "palabra_api": "witch"
+    },
+    {
+        "palabra": "brujas",
+        "palabra_api": "witch"
+    },
+    {
+        "palabra": "vampiro",
+        "palabra_api": "vampire"
+    },
+    {
+        "palabra": "vampiros",
+        "palabra_api": "vampire"
+    },
+    {
+        "palabra": "cazador de vampiros",
+        "palabra_api": "vampire hunter (slayer)"
+    },
+    {
+        "palabra": "hombre lobo",
+        "palabra_api": "werewolf"
+    },
+    {
+        "palabra": "momia",
+        "palabra_api": "mummy"
+    },
+    {
+        "palabra": "drácula",
+        "palabra_api": "dracula"
+    },
+    {
+        "palabra": "monstruo",
+        "palabra_api": "monster"
+    },
+    {
+        "palabra": "monstruos",
+        "palabra_api": "monster"
+    },
+    {
+        "palabra": "criatura",
+        "palabra_api": "creature"
+    },
+    {
+        "palabra": "criaturas",
+        "palabra_api": "creature"
+    },
+    {
+        "palabra": "monstruo marino",
+        "palabra_api": "sea monster"
+    },
+    {
+        "palabra": "gore",
+        "palabra_api": "gore"
+    },
+    {
+        "palabra": "slasher",
+        "palabra_api": "slasher"
+    },
+    {
+        "palabra": "asesino enmascarado",
+        "palabra_api": "masked killer"
+    },
+    {
+        "palabra": "muñeco",
+        "palabra_api": "doll"
+    },
+    {
+        "palabra": "ataque animal",
+        "palabra_api": "animal attack"
+    },
+    {
+        "palabra": "animal terrorífico",
+        "palabra_api": "animal horror"
+    },
+    {
+        "palabra": "metraje encontrado",
+        "palabra_api": "found footage"
+    },
+    {
+        "palabra": "found footage",
+        "palabra_api": "found footage"
+    },
+    {
+        "palabra": "invasión en casa",
+        "palabra_api": "home invasion"
+    },
+    {
+        "palabra": "thriller de acción",
+        "palabra_api": "action thriller"
+    },
+    {
+        "palabra": "comedia de acción",
+        "palabra_api": "action comedy"
+    },
+    {
+        "palabra": "héroe de acción",
+        "palabra_api": "action hero"
+    },
+    {
+        "palabra": "escenas de acción",
+        "palabra_api": "action sequence"
+    },
+    {
+        "palabra": "pelea",
+        "palabra_api": "fight"
+    },
+    {
+        "palabra": "peleas",
+        "palabra_api": "fight"
+    },
+    {
+        "palabra": "escena de pelea",
+        "palabra_api": "fight scene"
+    },
+    {
+        "palabra": "tiroteo",
+        "palabra_api": "shootout"
+    },
+    {
+        "palabra": "tiroteos",
+        "palabra_api": "gunfight"
+    },
+    {
+        "palabra": "pistola",
+        "palabra_api": "gun"
+    },
+    {
+        "palabra": "armas",
+        "palabra_api": "firearm"
+    },
+    {
+        "palabra": "persecución",
+        "palabra_api": "relentless pursuit"
+    },
+    {
+        "palabra": "persecución en moto",
+        "palabra_api": "motorcycle chase"
+    },
+    {
+        "palabra": "persecución en helicóptero",
+        "palabra_api": "helicopter chase"
+    },
+    {
+        "palabra": "coches",
+        "palabra_api": "car"
+    },
+    {
+        "palabra": "persecuciones de coches",
+        "palabra_api": "car chases"
+    },
+    {
+        "palabra": "carreras",
+        "palabra_api": "racing"
+    },
+    {
+        "palabra": "carreras de coches",
+        "palabra_api": "car racing"
+    },
+    {
+        "palabra": "artes marciales",
+        "palabra_api": "martial arts"
+    },
+    {
+        "palabra": "kung fu",
+        "palabra_api": "kung fu"
+    },
+    {
+        "palabra": "ninja",
+        "palabra_api": "ninja"
+    },
+    {
+        "palabra": "samurái",
+        "palabra_api": "samurai"
+    },
+    {
+        "palabra": "espada",
+        "palabra_api": "sword"
+    },
+    {
+        "palabra": "asesino",
+        "palabra_api": "assassin"
+    },
+    {
+        "palabra": "sicario",
+        "palabra_api": "hitman"
+    },
+    {
+        "palabra": "asesino retirado",
+        "palabra_api": "retired assassin"
+    },
+    {
+        "palabra": "vigilante",
+        "palabra_api": "vigilante"
+    },
+    {
+        "palabra": "venganza",
+        "palabra_api": "revenge"
+    },
+    {
+        "palabra": "motivo de venganza",
+        "palabra_api": "revenge motive"
+    },
+    {
+        "palabra": "misión suicida",
+        "palabra_api": "suicide mission"
+    },
+    {
+        "palabra": "infiltración",
+        "palabra_api": "infiltration"
+    },
+    {
+        "palabra": "operación encubierta",
+        "palabra_api": "undercover operation"
+    },
+    {
+        "palabra": "agente encubierto",
+        "palabra_api": "undercover agent"
+    },
+    {
+        "palabra": "fuerzas especiales",
+        "palabra_api": "special forces training"
+    },
+    {
+        "palabra": "policía",
+        "palabra_api": "police"
+    },
+    {
+        "palabra": "detective",
+        "palabra_api": "police detective"
+    },
+    {
+        "palabra": "corrupción policial",
+        "palabra_api": "police corruption"
+    },
+    {
+        "palabra": "poli corrupto",
+        "palabra_api": "dirty cop"
+    },
+    {
+        "palabra": "brutalidad policial",
+        "palabra_api": "police brutality"
+    },
+    {
+        "palabra": "criminal",
+        "palabra_api": "crime"
+    },
+    {
+        "palabra": "crimen organizado",
+        "palabra_api": "organized crime"
+    },
+    {
+        "palabra": "jefe criminal",
+        "palabra_api": "crime boss"
+    },
+    {
+        "palabra": "familia criminal",
+        "palabra_api": "crime family"
+    },
+    {
+        "palabra": "mafia",
+        "palabra_api": "mafia"
+    },
+    {
+        "palabra": "mafia siciliana",
+        "palabra_api": "sicilian mafia"
+    },
+    {
+        "palabra": "gánster",
+        "palabra_api": "gangster"
+    },
+    {
+        "palabra": "cártel",
+        "palabra_api": "cartel"
+    },
+    {
+        "palabra": "robo",
+        "palabra_api": "robbery"
+    },
+    {
+        "palabra": "atraco",
+        "palabra_api": "heist"
+    },
+    {
+        "palabra": "golpe",
+        "palabra_api": "heist"
+    },
+    {
+        "palabra": "robo de banco",
+        "palabra_api": "bank robbery"
+    },
+    {
+        "palabra": "robo de diamantes",
+        "palabra_api": "diamond heist"
+    },
+    {
+        "palabra": "tesoro enterrado",
+        "palabra_api": "buried treasure"
+    },
+    {
+        "palabra": "tesoro oculto",
+        "palabra_api": "hidden treasure"
+    },
+    {
+        "palabra": "secuestro",
+        "palabra_api": "kidnapping"
+    },
+    {
+        "palabra": "persona desaparecida",
+        "palabra_api": "missing person"
+    },
+    {
+        "palabra": "desaparición misteriosa",
+        "palabra_api": "mysterious disappearance"
+    },
+    {
+        "palabra": "investigación",
+        "palabra_api": "investigation"
+    },
+    {
+        "palabra": "periodismo de investigación",
+        "palabra_api": "investigative journalism"
+    },
+    {
+        "palabra": "detectivesca",
+        "palabra_api": "whodunnit"
+    },
+    {
+        "palabra": "quién lo hizo",
+        "palabra_api": "whodunnit"
+    },
+    {
+        "palabra": "asesinato",
+        "palabra_api": "murder"
+    },
+    {
+        "palabra": "misterio de asesinato",
+        "palabra_api": "murder mystery"
+    },
+    {
+        "palabra": "asesino en serie",
+        "palabra_api": "serial killer"
+    },
+    {
+        "palabra": "asesinos en serie",
+        "palabra_api": "serial killers"
+    },
+    {
+        "palabra": "psicópata",
+        "palabra_api": "psychopath"
+    },
+    {
+        "palabra": "killer",
+        "palabra_api": "killer"
+    },
+    {
+        "palabra": "romántica",
+        "palabra_api": "romantic"
+    },
+    {
+        "palabra": "romántico",
+        "palabra_api": "romantic"
+    },
+    {
+        "palabra": "drama romántico",
+        "palabra_api": "romantic drama"
+    },
+    {
+        "palabra": "comedia romántica",
+        "palabra_api": "romcom"
+    },
+    {
+        "palabra": "problemas de pareja",
+        "palabra_api": "relationship problems"
+    },
+    {
+        "palabra": "pareja casada",
+        "palabra_api": "married couple"
+    },
+    {
+        "palabra": "matrimonio",
+        "palabra_api": "marriage"
+    },
+    {
+        "palabra": "crisis matrimonial",
+        "palabra_api": "marriage crisis"
+    },
+    {
+        "palabra": "boda",
+        "palabra_api": "wedding"
+    },
+    {
+        "palabra": "recién casados",
+        "palabra_api": "newlywed"
+    },
+    {
+        "palabra": "triángulo amoroso",
+        "palabra_api": "love triangle"
+    },
+    {
+        "palabra": "amor prohibido",
+        "palabra_api": "forbidden love"
+    },
+    {
+        "palabra": "enemigos a amantes",
+        "palabra_api": "enemies to lovers"
+    },
+    {
+        "palabra": "amor a primera vista",
+        "palabra_api": "love at first sight"
+    },
+    {
+        "palabra": "amor eterno",
+        "palabra_api": "eternal love"
+    },
+    {
+        "palabra": "alma gemela",
+        "palabra_api": "soulmates"
+    },
+    {
+        "palabra": "desamor",
+        "palabra_api": "heartbreak"
+    },
+    {
+        "palabra": "infidelidad",
+        "palabra_api": "infidelity"
+    },
+    {
+        "palabra": "celos",
+        "palabra_api": "jealousy"
+    },
+    {
+        "palabra": "relaciones familiares",
+        "palabra_api": "family relationships"
+    },
+    {
+        "palabra": "conflicto familiar",
+        "palabra_api": "family conflict"
+    },
+    {
+        "palabra": "dinámica familiar",
+        "palabra_api": "family dynamics"
+    },
+    {
+        "palabra": "padre e hijo",
+        "palabra_api": "parent child relationship"
+    },
+    {
+        "palabra": "madre e hija",
+        "palabra_api": "mother daughter relationship"
+    },
+    {
+        "palabra": "madre e hijo",
+        "palabra_api": "mother son relationship"
+    },
+    {
+        "palabra": "padre e hija",
+        "palabra_api": "father daughter relationship"
+    },
+    {
+        "palabra": "hermanos",
+        "palabra_api": "brotherhood"
+    },
+    {
+        "palabra": "madre soltera",
+        "palabra_api": "single mother"
+    },
+    {
+        "palabra": "padre soltero",
+        "palabra_api": "single father"
+    },
+    {
+        "palabra": "familia encontrada",
+        "palabra_api": "found family"
+    },
+    {
+        "palabra": "stop motion",
+        "palabra_api": "claymation"
+    },
+    {
+        "palabra": "alta fantasía",
+        "palabra_api": "high fantasy"
+    },
+    {
+        "palabra": "fantasía oscura",
+        "palabra_api": "dark fantasy"
+    },
+    {
+        "palabra": "fantasía urbana",
+        "palabra_api": "urban fantasy"
+    },
+    {
+        "palabra": "cuento de hadas",
+        "palabra_api": "fairy tale"
+    },
+    {
+        "palabra": "magia",
+        "palabra_api": "magic"
+    },
+    {
+        "palabra": "objeto mágico",
+        "palabra_api": "magical object"
+    },
+    {
+        "palabra": "realismo mágico",
+        "palabra_api": "magic realism"
+    },
+    {
+        "palabra": "mundo mágico",
+        "palabra_api": "secret world"
+    },
+    {
+        "palabra": "escuela de magia",
+        "palabra_api": "school of witchcraft"
+    },
+    {
+        "palabra": "hechicero",
+        "palabra_api": "wizard"
+    },
+    {
+        "palabra": "mitología",
+        "palabra_api": "based on myths, legends or folklore"
+    },
+    {
+        "palabra": "mitología japonesa",
+        "palabra_api": "japanese mythology"
+    },
+    {
+        "palabra": "mitología china",
+        "palabra_api": "chinese mythology"
+    },
+    {
+        "palabra": "elfos",
+        "palabra_api": "elves"
+    },
+    {
+        "palabra": "troll",
+        "palabra_api": "troll"
+    },
+    {
+        "palabra": "superhéroe",
+        "palabra_api": "superhero"
+    },
+    {
+        "palabra": "superhéroes",
+        "palabra_api": "superhero"
+    },
+    {
+        "palabra": "supervillano",
+        "palabra_api": "supervillain"
+    },
+    {
+        "palabra": "equipo de superhéroes",
+        "palabra_api": "superhero team"
+    },
+    {
+        "palabra": "identidad secreta",
+        "palabra_api": "secret identity"
+    },
+    {
+        "palabra": "identidad dual",
+        "palabra_api": "dual identity"
+    },
+    {
+        "palabra": "héroe",
+        "palabra_api": "hero"
+    },
+    {
+        "palabra": "villano",
+        "palabra_api": "villain"
+    },
+    {
+        "palabra": "antihéroe",
+        "palabra_api": "anti hero"
+    },
+    {
+        "palabra": "universo dc",
+        "palabra_api": "dc universe (dcu)"
+    },
+    {
+        "palabra": "basada en cómic",
+        "palabra_api": "based on comic"
+    },
+    {
+        "palabra": "basada en manga",
+        "palabra_api": "based on manga"
+    },
+    {
+        "palabra": "basada en videojuego",
+        "palabra_api": "based on video game"
+    },
+    {
+        "palabra": "primera guerra mundial",
+        "palabra_api": "world war i"
+    },
+    {
+        "palabra": "segunda guerra mundial",
+        "palabra_api": "world war ii"
+    },
+    {
+        "palabra": "guerra de vietnam",
+        "palabra_api": "vietnam war"
+    },
+    {
+        "palabra": "guerra fría",
+        "palabra_api": "cold war"
+    },
+    {
+        "palabra": "holocausto",
+        "palabra_api": "holocaust (shoah)"
+    },
+    {
+        "palabra": "campo de concentración",
+        "palabra_api": "concentration camp"
+    },
+    {
+        "palabra": "nazi",
+        "palabra_api": "nazi"
+    },
+    {
+        "palabra": "nazis",
+        "palabra_api": "nazi"
+    },
+    {
+        "palabra": "genocidio",
+        "palabra_api": "genocide"
+    },
+    {
+        "palabra": "esclavitud",
+        "palabra_api": "slavery"
+    },
+    {
+        "palabra": "evento histórico",
+        "palabra_api": "historical event"
+    },
+    {
+        "palabra": "drama histórico",
+        "palabra_api": "historical drama"
+    },
+    {
+        "palabra": "ficción histórica",
+        "palabra_api": "historical fiction"
+    },
+    {
+        "palabra": "política",
+        "palabra_api": "usa politics"
+    },
+    {
+        "palabra": "conspiración del gobierno",
+        "palabra_api": "government conspiracy"
+    },
+    {
+        "palabra": "gobierno",
+        "palabra_api": "government"
+    },
+    {
+        "palabra": "propaganda",
+        "palabra_api": "state propaganda"
+    },
+    {
+        "palabra": "espionaje",
+        "palabra_api": "spy"
+    },
+    {
+        "palabra": "misión de espionaje",
+        "palabra_api": "espionage mission"
+    },
+    {
+        "palabra": "fbi",
+        "palabra_api": "fbi"
+    },
+    {
+        "palabra": "nsa",
+        "palabra_api": "nsa agent"
+    },
+    {
+        "palabra": "armas nucleares",
+        "palabra_api": "nuclear weapons"
+    },
+    {
+        "palabra": "bomba atómica",
+        "palabra_api": "atomic bomb"
+    },
+    {
+        "palabra": "proyecto manhattan",
+        "palabra_api": "manhattan project"
+    },
+    {
+        "palabra": "terrorismo",
+        "palabra_api": "terrorist cell"
+    },
+    {
+        "palabra": "resistencia",
+        "palabra_api": "resistance"
+    },
+    {
+        "palabra": "rebelión",
+        "palabra_api": "rebellion"
+    },
+    {
+        "palabra": "divertida",
+        "palabra_api": "comedy"
+    },
+    {
+        "palabra": "divertido",
+        "palabra_api": "comedy"
+    },
+    {
+        "palabra": "graciosa",
+        "palabra_api": "comedy"
+    },
+    {
+        "palabra": "gracioso",
+        "palabra_api": "comedy"
+    },
+    {
+        "palabra": "risa",
+        "palabra_api": "comedy"
+    },
+    {
+        "palabra": "comedia de colegas",
+        "palabra_api": "buddy comedy"
+    },
+    {
+        "palabra": "humor absurdo",
+        "palabra_api": "absurd"
+    },
+    {
+        "palabra": "satira",
+        "palabra_api": "satire"
+    },
+    {
+        "palabra": "sátira",
+        "palabra_api": "satire"
+    },
+    {
+        "palabra": "feel good",
+        "palabra_api": "feel-good"
+    },
+    {
+        "palabra": "buen rollo",
+        "palabra_api": "feel-good"
+    },
+    {
+        "palabra": "optimista",
+        "palabra_api": "optimistic"
+    },
+    {
+        "palabra": "inspiradora",
+        "palabra_api": "inspirational"
+    },
+    {
+        "palabra": "inspirador",
+        "palabra_api": "inspirational"
+    },
+    {
+        "palabra": "nostalgia",
+        "palabra_api": "nostalgia"
+    },
+    {
+        "palabra": "nostálgica",
+        "palabra_api": "nostalgic"
+    },
+    {
+        "palabra": "triste",
+        "palabra_api": "sadness"
+    },
+    {
+        "palabra": "tragedia",
+        "palabra_api": "tragedy"
+    },
+    {
+        "palabra": "duelo",
+        "palabra_api": "grief"
+    },
+    {
+        "palabra": "trauma",
+        "palabra_api": "trauma"
+    },
+    {
+        "palabra": "redención",
+        "palabra_api": "redemption"
+    },
+    {
+        "palabra": "sacrificio",
+        "palabra_api": "sacrifice"
+    },
+    {
+        "palabra": "cantante",
+        "palabra_api": "singer"
+    },
+    {
+        "palabra": "baile",
+        "palabra_api": "dancing"
+    },
+    {
+        "palabra": "fútbol",
+        "palabra_api": "football (soccer) match"
+    },
+    {
+        "palabra": "baloncesto",
+        "palabra_api": "basketball team"
+    },
+    {
+        "palabra": "formula 1",
+        "palabra_api": "formula one (f1)"
+    },
+    {
+        "palabra": "f1",
+        "palabra_api": "formula one (f1)"
+    },
+    {
+        "palabra": "artista",
+        "palabra_api": "portrait of an artist"
+    },
+    {
+        "palabra": "basada en hechos reales",
+        "palabra_api": "based on true story"
+    },
+    {
+        "palabra": "historia real",
+        "palabra_api": "based on true story"
+    },
+    {
+        "palabra": "basada en una persona real",
+        "palabra_api": "based on real person"
+    },
+    {
+        "palabra": "biográfica",
+        "palabra_api": "biographical drama"
+    },
+    {
+        "palabra": "biopic",
+        "palabra_api": "biographical drama"
+    },
+    {
+        "palabra": "basada en novela",
+        "palabra_api": "based on novel or book"
+    },
+    {
+        "palabra": "basada en libro",
+        "palabra_api": "based on novel or book"
+    },
+    {
+        "palabra": "basada en obra de teatro",
+        "palabra_api": "based on play or musical"
+    },
+    {
+        "palabra": "remake",
+        "palabra_api": "remake"
+    },
+    {
+        "palabra": "precuela",
+        "palabra_api": "prequel"
+    },
+    {
+        "palabra": "secuela",
+        "palabra_api": "sequel"
+    },
+    {
+        "palabra": "giro de guion",
+        "palabra_api": "plot twist"
+    },
+    {
+        "palabra": "plot twist",
+        "palabra_api": "plot twist"
+    },
+    {
+        "palabra": "doble vida",
+        "palabra_api": "double life"
+    },
+    {
+        "palabra": "pérdida de memoria",
+        "palabra_api": "memory loss"
+    },
+    {
+        "palabra": "amnesia",
+        "palabra_api": "amnesia"
+    },
+    {
+        "palabra": "identidad",
+        "palabra_api": "identity"
+    },
+    {
+        "palabra": "pérdida de control",
+        "palabra_api": "loss of control"
+    },
+    {
+        "palabra": "soledad",
+        "palabra_api": "loneliness"
+    },
+    {
+        "palabra": "aislamiento",
+        "palabra_api": "isolation"
+    },
+    {
+        "palabra": "traición",
+        "palabra_api": "betrayal"
+    },
+    {
+        "palabra": "chantaje",
+        "palabra_api": "blackmail"
+    },
+    {
+        "palabra": "corrupción",
+        "palabra_api": "corruption"
+    },
+    {
+        "palabra": "adicción a drogas",
+        "palabra_api": "drug addiction"
+    },
+    {
+        "palabra": "drogas",
+        "palabra_api": "drugs"
+    },
+    {
+        "palabra": "redes sociales",
+        "palabra_api": "online privacy"
+    },
+    {
+        "palabra": "privacidad",
+        "palabra_api": "privacy"
+    },
+    {
+        "palabra": "hacker",
+        "palabra_api": "hacker"
+    },
+    {
+        "palabra": "ciberseguridad",
+        "palabra_api": "cybersecurity"
+    },
+    {
+        "palabra": "muertos vivientes",
+        "palabra_api": "zombie"
+    },
+    {
+        "palabra": "muerto viviente",
+        "palabra_api": "zombie"
+    },
+    {
+        "palabra": "no muertos",
+        "palabra_api": "zombie"
+    },
+    {
+        "palabra": "viaje temporal",
+        "palabra_api": "time travel"
+    },
+    {
+        "palabra": "viajes temporales",
+        "palabra_api": "time travel"
+    },
+    {
+        "palabra": "viajar en el tiempo",
+        "palabra_api": "time travel"
+    },
+    {
+        "palabra": "maquina del tiempo",
+        "palabra_api": "time travel"
+    },
+    {
+        "palabra": "máquina del tiempo",
+        "palabra_api": "time travel"
+    },
+    {
+        "palabra": "apocalipsis",
+        "palabra_api": "apocalypse"
+    },
+    {
+        "palabra": "fin del mundo",
+        "palabra_api": "apocalypse"
+    },
+    {
+        "palabra": "postapocaliptica",
+        "palabra_api": "post-apocalyptic future"
+    },
+    {
+        "palabra": "postapocalíptica",
+        "palabra_api": "post-apocalyptic future"
+    },
+    {
+        "palabra": "post apocaliptica",
+        "palabra_api": "post-apocalyptic future"
+    },
+    {
+        "palabra": "post apocalíptica",
+        "palabra_api": "post-apocalyptic future"
+    }
+]
