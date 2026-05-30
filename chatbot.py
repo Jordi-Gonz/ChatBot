@@ -340,7 +340,6 @@ def load_local_movie_data(filepath="DB/movie_dataset.json"):
             data = json.load(f)
         
         # Estas listas ahora contienen objetos/diccionarios según tu JSON
-        colecciones = data.get("colecciones", []) 
         estudios = data.get("estudios", [])
         plataformas = data.get("plataformas", []) 
         
@@ -356,7 +355,7 @@ def load_local_movie_data(filepath="DB/movie_dataset.json"):
         umbral_defecto = config_nlp.get("umbral_defecto", 0.7)
         intenciones_dict = data.get("intenciones", {})
         
-        return (generos, actores, directores, colecciones, estudios, 
+        return (generos, actores, directores, estudios, 
                 keywords, intenciones_dict, int_globales, umbral_defecto, plataformas)
 
     except Exception as e:
@@ -364,7 +363,7 @@ def load_local_movie_data(filepath="DB/movie_dataset.json"):
         return set(), set(), set(), [], [], set(), {}, [], 0.7, []
 
 # Carga global del sistema
-(GENEROS, ACTORES, DIRECTORES, COLECCIONES, ESTUDIOS, 
+(GENEROS, ACTORES, DIRECTORES, ESTUDIOS, 
  KEYWORDS, INTENCIONES, INT_GLOBALES, UMBRAL_DEFECTO, PLATAFORMAS) = load_local_movie_data()
 # Sirve para que el usuario escriba "supervivencia" y la API reciba "survival".
 KEYWORD_MAP_ES = load_keyword_translation_map()
@@ -780,21 +779,6 @@ def detect_entities(text_original):
 def process_text(text):
     doc = nlp(text.lower())
     return [token.lemma_ for token in doc if token.is_alpha and not token.is_stop]
-
-def apply_rules(words):
-    try:
-        with open("DB/rules.json", 'r', encoding='utf-8') as f:
-            rules_list = json.load(f)
-    except:
-        return "Dime más sobre qué tipo de cine buscas."
-    
-    selected_rule = None
-    for word in words:
-        for rule in rules_list:
-            if rule["palabra"].lower() == word:
-                if selected_rule is None or rule["prioridad"] > selected_rule["prioridad"]:
-                    selected_rule = rule
-    return selected_rule["respuesta"] if selected_rule else "Dime más sobre qué tipo de cine buscas."
 
 def search_movie_visual(movie_name):
     search_url = f"{BASE_URL}/search/movie?api_key={TMDB_API_KEY}&language=es-ES&query={movie_name}"
