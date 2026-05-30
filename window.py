@@ -1,5 +1,5 @@
 import streamlit as st
-from chatbot import detect_entities, analyze_intent_and_tags, search_by_all_entities, registrar_en_blacklist
+from chatbot import detect_entities, analyze_intent_and_tags, search_by_all_entities, registrar_en_blacklist, apply_tags_to_entities
 from data import nuevo_usuario
 
 
@@ -71,6 +71,7 @@ def run_gui():
 
             # Detección y visualización de Entidades
             entities = detect_entities(prompt)
+            entities = apply_tags_to_entities(entities, tags)
             movie_list = []
             
             # --- SECCIÓN OPTIMIZADA CON LA NUEVA FUNCIÓN ---
