@@ -667,7 +667,7 @@ def detect_entities(text_original):
             tokens_usuario = re.findall(r"\b\w+\b", text_lower)
 
             if nombre_entidad in text_lower:
-                if len(nombre_entidad) <= 3 and nombre_entidad not in tokens_usuario:
+                if len(nombre_entidad) <= 2 and nombre_entidad not in tokens_usuario:
                     continue
                 res[clave_res].append(nombre_entidad.title())
                 continue
