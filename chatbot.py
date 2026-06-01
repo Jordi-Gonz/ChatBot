@@ -72,7 +72,6 @@ def load_keyword_translation_map(filepath="DB/keyword_map_es.json"):
             "palabra_api": palabra_api
         })
 
-    # Primero frases largas: "viajes en el tiempo" antes que "tiempo".
     resultado.sort(key=lambda x: len(x["palabra_norm"]), reverse=True)
 
     return resultado
@@ -82,9 +81,7 @@ def detect_translated_keywords_with_ranges(text_original):
     """Detecta keywords españolas y devuelve (keywords_api, rangos_ocupados).
 
     Los rangos sirven para que después no se añadan keywords inglesas más genéricas
-    que estén dentro de la frase ya detectada. Ejemplo:
-    - "apocalipsis zombie" -> "zombie apocalypse"
-    - No queremos añadir también "zombie" por estar dentro de la misma frase.
+    que estén dentro de la frase ya detectada.
     """
     text_norm = normalize_for_keyword_match(text_original)
     detectadas = []
@@ -149,10 +146,6 @@ STOP_WORDS_PERSONA = {
     "van", "von", "bin", "ibn", "jr", "sr", "ii", "iii"
 }
 
-# Palabras que pueden aparecer justo antes de un apellido cuando el usuario lo usa solo:
-# "una peli con Holland", "algo de De Niro", "actor Pitt", etc.
-# Sirve para no confundir nombres completos que no existen en la BD:
-# "Tom Hanks" no debe activar "Truman Hanks" solo porque coincida el apellido.
 PALABRAS_CONTEXTO_PERSONA = {
     "con", "de", "del", "por", "para", "sobre", "en", "y", "o",
     "actor", "actriz", "director", "directora", "reparto", "protagonista",
@@ -185,12 +178,7 @@ def split_person_name(nombre):
 def apellido_contexto_valido(text_tokens_ordenados, apellido, info):
     """Comprueba si un apellido detectado aparece en un contexto razonable.
 
-    Problema que evita:
-    - BD contiene "Truman Hanks".
-    - Usuario escribe "Tom Hanks".
-    - Antes se detectaba "Truman Hanks" porque coincidía el apellido "Hanks".
-
-    Ahora, si justo antes del apellido hay otro nombre propio que no pertenece
+    Si justo antes del apellido hay otro nombre propio que no pertenece
     a esa persona, se considera falso positivo.
     """
     indices = [i for i, tok in enumerate(text_tokens_ordenados) if tok == apellido]
@@ -220,18 +208,15 @@ def apellido_contexto_valido(text_tokens_ordenados, apellido, info):
 
         anterior = text_tokens_ordenados[idx - 1]
 
-        # Caso normal: "con Holland", "de Pitt", "actor Cruise".
+        # Caso normal
         if anterior in PALABRAS_CONTEXTO_PERSONA or anterior in STOP_WORDS_PERSONA:
             return True
 
-        # Caso nombre completo real o apellidos compuestos:
-        # "Tom Holland" tiene antes de Holland a Tom; "Chiu Wai" tiene antes de Wai a Chiu.
-        # No vale cualquier inicial compartida, porque "A.J. Simmons" no debe activar "J.K. Simmons".
+        # Caso nombre completo real o apellidos compuestos
         if inmediato_anterior_persona and anterior == inmediato_anterior_persona:
             return True
 
-        # Permite que el usuario omita una inicial intermedia:
-        # "Samuel Jackson" -> "Samuel L. Jackson", "Michael Jordan" -> "Michael B. Jordan".
+        # Permite que el usuario omita una inicial intermedia
         if (
             info["nombre"]
             and len(info["nombre"]) > 1
@@ -240,7 +225,7 @@ def apellido_contexto_valido(text_tokens_ordenados, apellido, info):
         ):
             return True
 
-        # Caso iniciales escritas juntas: "JK Simmons" para "J.K. Simmons".
+        # Caso iniciales escritas juntas
         if iniciales_colapsadas and anterior == iniciales_colapsadas:
             return True
 
@@ -262,18 +247,16 @@ def score_person_match(text_norm, text_tokens, nombre_persona):
     if not info["tokens"]:
         return 0
 
-    # Nombres artísticos de una sola palabra: Zendaya, Madonna, etc.
+    # Nombres artísticos de una sola palabra
     if len(info["importantes"]) == 1:
         return 100 if contains_exact_phrase(text_norm, info["frase"]) else 0
 
-    # Nombre completo exacto: máxima confianza.
+    # Nombre completo exacto
     if contains_exact_phrase(text_norm, info["frase"]):
         return 100
 
     score = 0
     nombre_match = info["nombre"] in text_tokens if info["nombre"] else False
-    # No aceptamos iniciales sueltas como apellido. Evita que "J.K. Simmons" active
-    # también "A.J. Simmons" solo porque ambos contienen la inicial "j".
     apellidos_match = [
         ap for ap in info["apellidos"]
         if ap in text_tokens and ap not in STOP_WORDS_PERSONA and len(ap) > 1
@@ -285,8 +268,6 @@ def score_person_match(text_norm, text_tokens, nombre_persona):
     if apellidos_match:
         text_tokens_ordenados = list(text_tokens) if not isinstance(text_tokens, set) else []
 
-        # Si se llamó con set, reconstruimos tokens desde text_norm para poder mirar contexto.
-        # Mantiene compatibilidad con el resto del código.
         if not text_tokens_ordenados:
             text_tokens_ordenados = tokenize_for_match(text_norm)
 
@@ -311,10 +292,6 @@ def score_person_match(text_norm, text_tokens, nombre_persona):
 
 def detect_people_by_weight(text_original, personas, min_score=70):
     """Detecta actores/directores usando pesos por nombre y apellidos.
-
-    La clave es que un nombre propio suelto como "Tom" pesa poco y no se acepta.
-    Un apellido o nombre completo sí tiene suficiente peso, siempre que no contradiga
-    otro nombre escrito por el usuario.
     """
     text_norm = normalize_for_match(text_original)
     text_tokens = tokenize_for_match(text_original)
@@ -339,11 +316,9 @@ def load_local_movie_data(filepath="DB/movie_dataset.json"):
         with open(filepath, "r", encoding="utf-8") as f:
             data = json.load(f)
         
-        # Estas listas ahora contienen objetos/diccionarios según tu JSON
+        # Estas listas contienen objetos/diccionarios según tu JSON
         estudios = data.get("estudios", [])
         plataformas = data.get("plataformas", []) 
-        
-        # Estas siguen siendo listas de strings simples
         generos = set(data.get("generos", []))
         keywords = set(data.get("keywords", []))
         personas = data.get("personas", {})
@@ -365,7 +340,7 @@ def load_local_movie_data(filepath="DB/movie_dataset.json"):
 # Carga global del sistema
 (GENEROS, ACTORES, DIRECTORES, ESTUDIOS, 
  KEYWORDS, INTENCIONES, INT_GLOBALES, UMBRAL_DEFECTO, PLATAFORMAS) = load_local_movie_data()
-# Sirve para que el usuario escriba "supervivencia" y la API reciba "survival".
+# Traducción keywords
 KEYWORD_MAP_ES = load_keyword_translation_map()
 # Relación entre tags contextuales y filtros reales de búsqueda.
 TAG_TO_ENTITIES = {
@@ -546,12 +521,7 @@ def load_user_profile(filepath="DB/datos_letterboxd.json"):
         return json.load(f)
 
 def get_person_id(name):
-    """Obtiene el ID de persona en TMDB priorizando coincidencia exacta de nombre.
-
-    Antes se devolvía siempre el primer resultado. Eso podía provocar errores con nombres parecidos.
-    Ahora, si buscas "Tom Hanks", se intenta escoger primero el resultado cuyo nombre normalizado
-    sea exactamente "tom hanks". Si no existe coincidencia exacta, se usa el primer resultado.
-    """
+    """Obtiene el ID de persona en TMDB priorizando coincidencia exacta de nombre."""
     url = f"{BASE_URL}/search/person?api_key={TMDB_API_KEY}&query={name}"
     response = requests.get(url).json()
     results = response.get('results', [])
@@ -604,7 +574,6 @@ def get_collection_id(name):
     url = f"{BASE_URL}/search/collection?api_key={TMDB_API_KEY}&query={name}&language=es-ES"
     response = requests.get(url).json()
     if response.get('results'):
-        # Retornamos el ID de la primera coincidencia encontrada
         return response['results'][0]['id']
     return None
 
@@ -662,14 +631,7 @@ def search_discovery():
     return top_3
 
 def detect_entities(text_original):
-    """Detecta entidades con match más seguro.
-
-    Cambio importante del punto 2:
-    - Actores y directores ya no se detectan por substring simple.
-    - Se separan en nombre/apellidos y se puntúa cada parte.
-    - Solo nombre propio, como "Tom", no basta.
-    - Apellido o nombre completo sí basta.
-    """
+    """Detecta entidades con match más seguro."""
     text_lower = text_original.lower()
     doc = nlp(text_lower)
     lemas_usuario = [t.lemma_ for t in doc]
@@ -702,43 +664,44 @@ def detect_entities(text_original):
             if not nombre_entidad:
                 continue
 
+            tokens_usuario = re.findall(r"\b\w+\b", text_lower)
+
             if nombre_entidad in text_lower:
+                if len(nombre_entidad) <= 3 and nombre_entidad not in tokens_usuario:
+                    continue
                 res[clave_res].append(nombre_entidad.title())
                 continue
 
-            palabras_entidad = nombre_entidad.split()
-            if len(palabras_entidad) > 1:
-                palabras_significativas = [w for w in palabras_entidad if w not in STOP_WORDS_ENTIDADES and len(w) > 3]
-
-                if any(w in text_lower for w in palabras_significativas):
-                    res[clave_res].append(nombre_entidad.title())
+            palabras_entidad = [w for w in nombre_entidad.split() if w not in STOP_WORDS_ENTIDADES]
+            
+            if not palabras_entidad:
+                continue
+                
+            match_detectado = False
+            for token in tokens_usuario:
+                if len(token) <= 3 and threshold > 0.5:
+                    if token == nombre_entidad:
+                        match_detectado = True
+                        break
                     continue
-
-            if threshold < 0.5:
-                palabras_clave = [w for w in nombre_entidad.split() if len(w) > 4]
-                if any(w in text_lower for w in palabras_clave):
-                    res[clave_res].append(nombre_entidad.title())
-                    continue
-            else:
-                if fuzzy_match(text_lower, nombre_entidad, threshold):
-                    res[clave_res].append(nombre_entidad.title())
+                
+                if fuzzy_match(token, palabras_entidad[0], threshold):
+                    match_detectado = True
+                    break
+            
+            if match_detectado:
+                res[clave_res].append(nombre_entidad.title())
 
     # Personas: actores/directores con pesos por nombre y apellidos.
     res["actores"] = detect_people_by_weight(text_original, ACTORES)
     res["directores"] = detect_people_by_weight(text_original, DIRECTORES)
 
-  # Temas/Keywords en español traducidas a la keyword real de TMDB/API.
-    # Ejemplo: "supervivencia" -> "survival", "viajes en el tiempo" -> "time travel".
+  # Temas/Keywords en español traducidas a la keyword real de TMDB.
     translated_keywords, rangos_ocupados_keywords = detect_translated_keywords_with_ranges(text_original)
     for keyword_api in translated_keywords:
         res["temas"].append(keyword_api)
 
     # Temas/Keywords ya escritas como aparecen en la API.
-    # IMPORTANTE:
-    # Antes se buscaban palabras sueltas dentro del texto, y eso provocaba errores:
-    # "supervivencia" activaba "super villain" y "super power" porque contienen "super".
-    # Ahora solo aceptamos la keyword completa con límites de palabra.
-    # Además, se ordena por longitud para priorizar frases largas: "zombie apocalypse" antes que "zombie".
     text_norm_keywords = normalize_for_keyword_match(text_original)
 
     keywords_ordenadas = sorted(
@@ -823,7 +786,7 @@ def search_by_all_entities(entities, intencion="QUERER"):
     if intencion == "DESCUBRIR" and not any(entities.values()):
         return search_discovery()
 
-    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false&sort_by=popularity.desc"
+    search_url = f"{BASE_URL}/discover/movie?api_key={TMDB_API_KEY}&language=es-ES&adult=false"
 
     if entities.get("generos"):
         genres_num = get_genres_by_string(entities["generos"])
@@ -868,6 +831,21 @@ def search_by_all_entities(entities, intencion="QUERER"):
         if platform_ids:
             search_url += f"&watch_region=ES&with_watch_providers={','.join(platform_ids)}"
 
+    profile = load_user_profile()
+    decadas_a_filtrar = []
+
+    if entities.get("decada"):
+        decadas_a_filtrar.append(int(entities["decada"]))
+    else:
+        afinidad_decadas = profile.get('afinidad_decadas', {})
+        decadas_top = sorted(afinidad_decadas.items(), key=lambda x: x[1], reverse=True)[:3]
+        decadas_a_filtrar = [int(dec[0]) for dec in decadas_top if dec[0].isdigit()]
+
+    if decadas_a_filtrar:
+        año_minimo = min(decadas_a_filtrar)
+        año_maximo = max(decadas_a_filtrar) + 9
+        search_url += f"&primary_release_date.gte={año_minimo}-01-01&primary_release_date.lte={año_maximo}-12-31"
+        
     try:
         response = requests.get(search_url).json()
         movies = response.get('results', [])

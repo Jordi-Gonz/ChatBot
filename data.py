@@ -88,6 +88,7 @@ def procesar_pelicula(p):
 
 
 def obtener_lista(usuario):
+    """Lee todas las páginas de la lista de películas de un usuario y devuelve una array de estas """
     global lista_vistas
     url_base = f"https://letterboxd.com/{usuario}/films/"
     
@@ -137,6 +138,7 @@ def obtener_lista(usuario):
     lista_vistas = [r for r in resultados]
 
 def nuevo_usuario(usuario):
+    """ Guarda en un fichero JSON los datos del usuario y una blacklist vacía """
     if not usuario:
         genre_vacio = {g: 0.0 for g in GENRES}
         decade_vacia = {str(y): 0.0 for y in YEARS}

@@ -45,10 +45,12 @@ def run_gui():
         with st.chat_message(msg["role"]):
             if "intent_display" in msg: st.subheader(msg["intent_display"])
             st.markdown(msg["content"])
+
             if "tags_detected" in msg and msg["tags_detected"]:
                 tag_html = "".join([f'<span style="background-color:#454545; color:white; padding:2px 10px; border-radius:12px; margin-right:5px; font-size:12px; border:1px solid #666;">#{t}</span>' for t in msg["tags_detected"]])
                 st.markdown(tag_html, unsafe_allow_html=True)
                 st.write("")
+
             if "entities_detected" in msg: st.info(msg["entities_detected"])
             if "movie_info" in msg: render_movie_card(msg["movie_info"])
 
